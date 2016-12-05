@@ -161,7 +161,7 @@
       </span>
       
       <p class="shortcomment cmt">The Kalah framework for the AI course at FAU WS16/17.</p><div class="fullcomment"><div class="comment cmt"><p>The Kalah framework for the AI course at FAU WS16/17. This package contains:</p><ul><li>The abstract <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">info.kwarc.teaching.AI.Kalah.Agent</a> class, which is supposed to be extended
-    by your agents.</li><li>A <a href="HumanPlayer.html" class="extype" name="info.kwarc.teaching.AI.Kalah.HumanPlayer">info.kwarc.teaching.AI.Kalah.HumanPlayer</a> agent you can use to test your agents</li><li>A <a href="" class="extype" name="info.kwarc.teaching.AI.Kalah.Board">info.kwarc.teaching.AI.Kalah.Board</a> class representing a game board</li><li>A <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">info.kwarc.teaching.AI.Kalah.Game</a> class that lets two agents play each other
+    by your agents.</li><li>A <a href="HumanPlayer.html" class="extype" name="info.kwarc.teaching.AI.Kalah.HumanPlayer">info.kwarc.teaching.AI.Kalah.HumanPlayer</a> agent you can use to test your agents</li><li>A <a href="Board.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Board">info.kwarc.teaching.AI.Kalah.Board</a> class representing a game board</li><li>A <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">info.kwarc.teaching.AI.Kalah.Game</a> class that lets two agents play each other
     on a new board.
 </li></ul></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="info.kwarc.teaching.AI">AI</a></dd></dl></div>
     </li><li class="current-entities indented5">
@@ -172,8 +172,8 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="class" href="" title="Abstract class representing a game board."></a>
-                        <a href="" title="Abstract class representing a game board.">
+                        <a class="class" href="Board.html" title="Abstract class representing a game board."></a>
+                        <a href="Board.html" title="Abstract class representing a game board.">
                           Board
                         </a>
                       </li><li class="current-entities indented5">
@@ -196,8 +196,8 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="object" href="Tournament$.html" title=""></a>
-                        <a href="Tournament$.html" title="">
+                        <a class="object" href="" title=""></a>
+                        <a href="" title="">
                           Tournament
                         </a>
                       </li>
@@ -205,12 +205,12 @@
             </div>
           </div>
           <div id="content">
-            <body class="class type">
+            <body class="object value">
       <div id="definition">
-        <div class="big-circle class">c</div>
+        <div class="big-circle object">o</div>
         <p id="owner"><a href="../../../../index.html" class="extype" name="info">info</a>.<a href="../../../index.html" class="extype" name="info.kwarc">kwarc</a>.<a href="../../index.html" class="extype" name="info.kwarc.teaching">teaching</a>.<a href="../index.html" class="extype" name="info.kwarc.teaching.AI">AI</a>.<a href="index.html" class="extype" name="info.kwarc.teaching.AI.Kalah">Kalah</a></p>
-        <h1>Board<span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html" title="Permalink">
+        <h1>Tournament<span class="permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -219,18 +219,16 @@
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">class</span>
+        <span class="modifier"></span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">Board</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">Tournament</span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Abstract class representing a game board. <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">Game</a> uses its own private extension of this class, as to prevent
-cheating. Accessible values are:
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -260,7 +258,7 @@ cheating. Accessible values are:
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="info.kwarc.teaching.AI.Kalah.Board"><span>Board</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="info.kwarc.teaching.AI.Kalah.Tournament"><span>Tournament</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -278,109 +276,19 @@ cheating. Accessible values are:
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="info.kwarc.teaching.AI.Kalah.Board#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(houses:Int,initSeeds:Int):info.kwarc.teaching.AI.Kalah.Board"></a><a id="&lt;init&gt;:Board"></a>
-      <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#&lt;init&gt;(houses:Int,initSeeds:Int):info.kwarc.teaching.AI.Kalah.Board" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">Board</span><span class="params">(<span name="houses">houses: <span class="extype" name="scala.Int">Int</span></span>, <span name="initSeeds">initSeeds: <span class="extype" name="scala.Int">Int</span></span>)</span>
-      </span>
-      
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">houses</dt><dd class="cmt"><p>: the number of houses per player and</p></dd><dt class="param">initSeeds</dt><dd class="cmt"><p>: the initial number of seeds per house</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
+
+        
 
         
 
         <div class="values members">
-              <h3>Abstract Value Members</h3>
-              <ol><li name="info.kwarc.teaching.AI.Kalah.Board#asString" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="asString(pl:info.kwarc.teaching.AI.Kalah.Agent):String"></a><a id="asString(Agent):String"></a>
-      <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#asString(pl:info.kwarc.teaching.AI.Kalah.Agent):String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">asString</span><span class="params">(<span name="pl">pl: <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      
-    </li><li name="info.kwarc.teaching.AI.Kalah.Board#getScore" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="getScore(player:Int):Int"></a><a id="getScore(Int):Int"></a>
-      <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#getScore(player:Int):Int" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getScore</span><span class="params">(<span name="player">player: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Gives the current number of seeds in the store of player i</p><div class="fullcomment"><div class="comment cmt"><p>Gives the current number of seeds in the store of player i</p></div><dl class="paramcmts block"><dt class="param">player</dt><dd class="cmt"><p>has to be either 1 or 2</p></dd><dt>returns</dt><dd class="cmt"><p>number of seeds</p></dd></dl></div>
-    </li><li name="info.kwarc.teaching.AI.Kalah.Board#getSeed" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="getSeed(player:Int,house:Int):Int"></a><a id="getSeed(Int,Int):Int"></a>
-      <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#getSeed(player:Int,house:Int):Int" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getSeed</span><span class="params">(<span name="player">player: <span class="extype" name="scala.Int">Int</span></span>, <span name="house">house: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Gives the number of seeds in a specific house</p><div class="fullcomment"><div class="comment cmt"><p>Gives the number of seeds in a specific house</p></div><dl class="paramcmts block"><dt class="param">player</dt><dd class="cmt"><p>which player's side of the gameboard (has to be either 1 or 2)</p></dd><dt class="param">house</dt><dd class="cmt"><p>which house of the specified player (has to be between 1 and houses)</p></dd><dt>returns</dt><dd class="cmt"><p>the number of seeds in the specified house</p></dd></dl></div>
-    </li><li name="info.kwarc.teaching.AI.Kalah.Board#getState" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="getState:(List[Int],List[Int],Int,Int)"></a>
-      <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#getState:(List[Int],List[Int],Int,Int)" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getState</span><span class="result">: (<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>], <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>], <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>
-      </span>
-      
-      <p class="shortcomment cmt">Gives the state of the whole gameboard</p><div class="fullcomment"><div class="comment cmt"><p>Gives the state of the whole gameboard</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a quadruple consisting of
-        1) The list of numbers of seeds in the houses of Player 1
-        2) The list of numbers of seeds in the houses of Player 2
-        3) The number of seeds in Player 1's store
-        4) The number of seeds in Player 2's store</p></dd></dl></div>
-    </li></ol>
-            </div>
-
-        <div class="values members">
-              <h3>Concrete Value Members</h3>
+              <h3>Value Members</h3>
               <ol>
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -396,7 +304,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html###():Int" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -412,7 +320,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -428,7 +336,7 @@ cheating. Accessible values are:
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -444,7 +352,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#clone():Object" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -466,7 +374,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -482,7 +390,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -498,7 +406,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#finalize():Unit" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -520,7 +428,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -536,7 +444,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#hashCode():Int" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -549,42 +457,10 @@ cheating. Accessible values are:
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="info.kwarc.teaching.AI.Kalah.Board#houses" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="houses:Int"></a>
-      <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#houses:Int" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">houses</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      
-      
-    </li><li name="info.kwarc.teaching.AI.Kalah.Board#initSeeds" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="initSeeds:Int"></a>
-      <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#initSeeds:Int" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">initSeeds</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      
-      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -600,7 +476,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -616,7 +492,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#notify():Unit" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -632,7 +508,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -645,10 +521,58 @@ cheating. Accessible values are:
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="info.kwarc.teaching.AI.Kalah.Tournament#players" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="players:List[info.kwarc.teaching.AI.Kalah.Agent]"></a><a id="players:List[Agent]"></a>
+      <span class="permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#players:List[info.kwarc.teaching.AI.Kalah.Agent]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">players</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a>]</span>
+      </span>
+      
+      
+    </li><li name="info.kwarc.teaching.AI.Kalah.Tournament#run" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="run(houses:Int,seeds:Int):Unit"></a><a id="run(Int,Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#run(houses:Int,seeds:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">run</span><span class="params">(<span name="houses">houses: <span class="extype" name="scala.Int">Int</span></span>, <span name="seeds">seeds: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      
+    </li><li name="info.kwarc.teaching.AI.Kalah.Tournament#scores" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="scores:scala.collection.mutable.HashMap[info.kwarc.teaching.AI.Kalah.Agent,Int]"></a><a id="scores:HashMap[Agent,Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#scores:scala.collection.mutable.HashMap[info.kwarc.teaching.AI.Kalah.Agent,Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scores</span><span class="result">: <span class="extype" name="scala.collection.mutable.HashMap">HashMap</span>[<a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a>, <span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -664,7 +588,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#toString():String" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -680,7 +604,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#wait():Unit" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -702,7 +626,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -724,7 +648,7 @@ cheating. Accessible values are:
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Board.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament$.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>

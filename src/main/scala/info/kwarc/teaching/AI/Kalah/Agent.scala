@@ -6,7 +6,7 @@ package info.kwarc.teaching.AI.Kalah
   *                   below)
   * @param students : Please put your full names in this list.
   */
-abstract class Agent(name : String, students : List[String]) {
+abstract class Agent(val name : String, val students : List[String]) {
   /**
     * is called once at the start of a game.
     * @param board The [[Board]] used (states in particular the parameters)
