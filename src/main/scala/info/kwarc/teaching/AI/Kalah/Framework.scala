@@ -70,13 +70,18 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     var p1Store = 0
     var p2Store = 0
 
-
-    def getHouses(implicit ag : Agent) : List[Int] = ag match {
-      case Player1.pl => p1Houses.values.toList
-      case Player2.pl => p2Houses.values.toList
+    private def valuelist(pl : Player) = pl match {
+      case Player1 => (1 to houses).map(p1Houses.apply).toList
+      case Player2 => (1 to houses).map(p2Houses.apply).toList
     }
 
-    def getState = (p1Houses.values.toList,p2Houses.values.toList,p1Store,p2Store)
+
+    def getHouses(implicit ag : Agent) : List[Int] = ag match {
+      case Player1.pl => valuelist(Player1)
+      case Player2.pl => valuelist(Player2)
+    }
+
+    def getState = (valuelist(Player1),valuelist(Player2),p1Store,p2Store)
     def getSeed(player : Int, house : Int) : Int = {
       require(player ==1 || player == 2)
       require(house >= 1 && house <= houses)
@@ -208,7 +213,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       val move = future { pl.move }
       Await.result(move, 5 seconds)
       */
-    if (!(move >= 1 && move <= houses)) throw Illegal(pl)
+    // println(move)
+    if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl)
     var index = HouseIndex(pl,move)
     val counter = index.pull
     (1 to counter) foreach (_ => {
@@ -234,12 +240,15 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     * @return A pair of integers representing the scores of players 1 and 2
     */
   def play(showboard : Boolean = false) : (Int,Int) = {
+    var i = 1
     try {
       while (finished.isEmpty) {
         val ret = playerMove(Player1, showboard) + {if (finished.isEmpty) playerMove(Player2, showboard) else ""}
         if (!showboard) {
-          print("\rScore: " + GameBoard.p1Store + " : " + GameBoard.p2Store + " " + ret)
+          print("\rRound " + i + " Score: " + GameBoard.p1Store + " : " + GameBoard.p2Store + " " + ret)
         }
+        i+=1
+        // readLine()
       }
     } catch {
       case Illegal(Player1) =>
@@ -249,7 +258,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
         println("Player2 made illegal move")
         (Store1.get + 1, 0)
     }
-    print("\n")
+
+    print("\rRound " + i + " Score: " + GameBoard.p1Store + " : " + GameBoard.p2Store + "\n")
     if (showboard) println(GameBoard.toString)
     if (finished contains Player1) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
   }

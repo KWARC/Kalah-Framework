@@ -57,14 +57,15 @@ class RandomPlayer(name : String) extends Agent(name,List("Dennis")) {
   def move : Int = {
     val ls = currentboard.getHouses
     val rnd = new Random
-    var i = rnd.nextInt(ls.length + 1)
-    while (i > 0 && ls(i-1) == 0) {
-      i = rnd.nextInt(ls.length + 1)
+    var i = rnd.nextInt(ls.length /* + 1*/)
+    while (/* i > 0 && */ ls(i /* -1 */ ) == 0) {
+      i = rnd.nextInt(ls.length /* + 1 */)
     }
+    /*
     if (i == 0) {
       Thread.sleep(10000)
       0
-    } else i
+    } else */ i + 1
   }
 }
 
