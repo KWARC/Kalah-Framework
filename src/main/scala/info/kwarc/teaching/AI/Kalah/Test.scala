@@ -37,6 +37,6 @@ class Tournament(players : List[Agent]) {
         }
       })
     })
-    scores.toList.sortBy(_._2)
+    scores.toList.sortBy(_._2).reverse
   }
 }
