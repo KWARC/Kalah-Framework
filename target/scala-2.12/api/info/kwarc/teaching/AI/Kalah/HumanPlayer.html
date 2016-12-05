@@ -190,14 +190,26 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="RandomPlayer.html" title=""></a>
+                        <a href="RandomPlayer.html" title="">
+                          RandomPlayer
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="object" href="Test$.html" title="Created by jazzpirate on 08.11.16."></a>
                         <a href="Test$.html" title="Created by jazzpirate on 08.11.16.">
                           Test
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="object" href="Tournament$.html" title=""></a>
-                        <a href="Tournament$.html" title="">
+                        <a class="class" href="TimeOut.html" title=""></a>
+                        <a href="TimeOut.html" title="">
+                          TimeOut
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="class" href="Tournament.html" title=""></a>
+                        <a href="Tournament.html" title="">
                           Tournament
                         </a>
                       </li>
@@ -508,6 +520,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="info.kwarc.teaching.AI.Kalah.Agent#me" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="me:info.kwarc.teaching.AI.Kalah.Agent"></a><a id="me:Agent"></a>
+      <span class="permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/HumanPlayer.html#me:info.kwarc.teaching.AI.Kalah.Agent" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">me</span><span class="result">: <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></dd></dl></div>
     </li><li name="info.kwarc.teaching.AI.Kalah.HumanPlayer#move" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="move:Int"></a>
       <span class="permalink">
@@ -523,7 +551,8 @@
         <span class="name">move</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       
-      <p class="shortcomment cmt">This method is called by <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">Game</a> to request an action.</p><div class="fullcomment"><div class="comment cmt"><p>This method is called by <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">Game</a> to request an action.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>An integer between 1 and n representing the house to play.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="info.kwarc.teaching.AI.Kalah.HumanPlayer">HumanPlayer</a> → <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></dd></dl></div>
+      <p class="shortcomment cmt">This method is called by <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">Game</a> to request an action.</p><div class="fullcomment"><div class="comment cmt"><p>This method is called by <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">Game</a> to request an action. Note that you have <b>at most</b> 5sec to
+return an action; otherwise the thread is aborted and a random non-empty house chosen.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>An integer between 1 and n representing the house to play.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="info.kwarc.teaching.AI.Kalah.HumanPlayer">HumanPlayer</a> → <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></dd></dl></div>
     </li><li name="info.kwarc.teaching.AI.Kalah.Agent#name" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
       <span class="permalink">

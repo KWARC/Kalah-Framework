@@ -1,6 +1,9 @@
 package info.kwarc.teaching.AI.Kalah
 
 import scala.collection.mutable
+import scala.concurrent._
+import scala.concurrent.duration._
+import ExecutionContext.Implicits.global
 
 
 /**
@@ -20,6 +23,14 @@ abstract class Board(val houses : Int, val initSeeds : Int) {
     *         4) The number of seeds in Player 2's store
     */
   def getState : (List[Int],List[Int],Int,Int)
+
+  /**
+    * The seeds in each house of some Player
+    * @param ag - the agent whose houses to return. Implicit, so that a agent can query
+    *           its own houses with no parameters
+    * @return the list of seeds for each house.
+    */
+  def getHouses(implicit ag : Agent) : List[Int]
 
   /**
     * Gives the number of seeds in a specific house
@@ -59,6 +70,12 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     var p1Store = 0
     var p2Store = 0
 
+
+    def getHouses(implicit ag : Agent) : List[Int] = ag match {
+      case Player1.pl => p1Houses.values.toList
+      case Player2.pl => p2Houses.values.toList
+    }
+
     def getState = (p1Houses.values.toList,p2Houses.values.toList,p1Store,p2Store)
     def getSeed(player : Int, house : Int) : Int = {
       require(player ==1 || player == 2)
@@ -79,7 +96,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       else if (i < 100) " " + i.toString + "  "
       else " " + i.toString + " "
     }
-    private def asStringPl(player : Player) : String = {
+    def asStringPl(player : Player) : String = {
         "      |" + (1 to houses).map(_ => "-----").mkString("|") + "|\n" +
         "|-----|" + {player match {
           case Player1 => (1 to houses).reverse.map(i => doIntStr(p2Houses(i)) ).mkString("|")
@@ -104,9 +121,11 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       case Player2.pl => asStringPl(Player2)
       case _ => throw new Error("Unknown Agent: " + pl.getClass)
     }
+
+    override def toString: String = asStringPl(Player1)
   }
 
-  sealed private abstract class Player {
+  sealed abstract class Player {
     val pl : Agent
     def move : Int = pl.move
     def init : Unit
@@ -170,9 +189,26 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
   Player1.init
   Player2.init
 
-  private def playerMove(pl : Player) : Unit = {
-    val move = pl.move
-    require(move >= 1 && move <= houses)
+  private def playerMove(pl : Player,showboard : Boolean) : String = {
+    var ret = ""
+    if (showboard) {
+      println(pl + ": ")
+      println(GameBoard.toString)
+    }
+    val move = try {
+      Await.result(Future {
+        pl.move
+      }, 5 seconds)
+    } catch {
+      case e : java.util.concurrent.TimeoutException =>
+        ret = pl.pl.name + " timed out!"
+        (1 to houses).find(i => HouseIndex(pl,i).get > 0).get
+    }
+      /*
+      val move = future { pl.move }
+      Await.result(move, 5 seconds)
+      */
+    if (!(move >= 1 && move <= houses)) throw Illegal(pl)
     var index = HouseIndex(pl,move)
     val counter = index.pull
     (1 to counter) foreach (_ => {
@@ -182,8 +218,13 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     if (index.pl == pl && index.get == 1 && index.hn != 0) {
       store(pl).add(index.pull + HouseIndex(pl.other,houses + 1 - index.hn).pull)
     }
-    if (index.pl == pl && index.hn == 0) playerMove(pl)
+    if (index.pl == pl && index.hn == 0 && (1 to houses).exists(i => HouseIndex(pl,i).get > 0))
+      ret + playerMove(pl,showboard) else {
+      ret
+    }
   }
+
+  case class Illegal(pl : Player) extends Throwable
 
   private def finished : Option[Player] = if ((1 to houses).forall(i => HouseIndex(Player1,i).get == 0))
     Some(Player2) else if ((1 to houses).forall(i => HouseIndex(Player2,i).get == 0)) Some(Player1)
@@ -192,11 +233,24 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     * Starts one game between (new instances of) Pl1 and Pl2.
     * @return A pair of integers representing the scores of players 1 and 2
     */
-  def play : (Int,Int) = {
-    while (finished.isEmpty) {
-      playerMove(Player1)
-      playerMove(Player2)
+  def play(showboard : Boolean = false) : (Int,Int) = {
+    try {
+      while (finished.isEmpty) {
+        val ret = playerMove(Player1, showboard) + {if (finished.isEmpty) playerMove(Player2, showboard) else ""}
+        if (!showboard) {
+          print("\rScore: " + GameBoard.p1Store + " : " + GameBoard.p2Store + " " + ret)
+        }
+      }
+    } catch {
+      case Illegal(Player1) =>
+        println("Player1 made illegal move")
+        (0,Store2.get + 1)
+      case Illegal(Player2) =>
+        println("Player2 made illegal move")
+        (Store1.get + 1, 0)
     }
-    if (finished contains Player1) (Store1.sum,Store2.get) else (Store1.get,Store2.sum)
+    print("\n")
+    if (showboard) println(GameBoard.toString)
+    if (finished contains Player1) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
   }
 }
