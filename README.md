@@ -9,3 +9,5 @@ To implement your own agent, create a new class/object extending [[info.kwarc.te
 and implement the required methods (init and move). For details see the documentation.
 
 Make sure to name your class/object something *unique* as to not clash with other submissions!
+
+Also, note that each agent has a time constraint of 5 seconds per move!
