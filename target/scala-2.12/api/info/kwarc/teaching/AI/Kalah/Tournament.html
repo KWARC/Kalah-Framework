@@ -291,9 +291,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="info.kwarc.teaching.AI.Kalah.Tournament#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(players:List[info.kwarc.teaching.AI.Kalah.Agent]):info.kwarc.teaching.AI.Kalah.Tournament"></a><a id="&lt;init&gt;:Tournament"></a>
+      <a id="&lt;init&gt;():info.kwarc.teaching.AI.Kalah.Tournament"></a><a id="&lt;init&gt;:Tournament"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament.html#&lt;init&gt;(players:List[info.kwarc.teaching.AI.Kalah.Agent]):info.kwarc.teaching.AI.Kalah.Tournament" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament.html#&lt;init&gt;():info.kwarc.teaching.AI.Kalah.Tournament" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -302,7 +302,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Tournament</span><span class="params">(<span name="players">players: <span class="extype" name="scala.List">List</span>[<a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a>]</span>)</span>
+        <span class="name">Tournament</span><span class="params">()</span>
       </span>
       
       
@@ -552,10 +552,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="info.kwarc.teaching.AI.Kalah.Tournament#run" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="run(houses:Int,seeds:Int):List[(info.kwarc.teaching.AI.Kalah.Agent,Int)]"></a><a id="run(Int,Int):List[(Agent,Int)]"></a>
+    </li><li name="info.kwarc.teaching.AI.Kalah.Tournament#players" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="players:List[info.kwarc.teaching.AI.Kalah.Agent]"></a><a id="players:List[Agent]"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament.html#run(houses:Int,seeds:Int):List[(info.kwarc.teaching.AI.Kalah.Agent,Int)]" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament.html#players:List[info.kwarc.teaching.AI.Kalah.Agent]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -564,14 +564,30 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">run</span><span class="params">(<span name="houses">houses: <span class="extype" name="scala.Int">Int</span></span>, <span name="seeds">seeds: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.List">List</span>[(<a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a>, <span class="extype" name="scala.Int">Int</span>)]</span>
+        <span class="name">players</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a>]</span>
+      </span>
+      
+      
+    </li><li name="info.kwarc.teaching.AI.Kalah.Tournament#run" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="run(houses:Int,seeds:Int):List[(String,Int)]"></a><a id="run(Int,Int):List[(String,Int)]"></a>
+      <span class="permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament.html#run(houses:Int,seeds:Int):List[(String,Int)]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">run</span><span class="params">(<span name="houses">houses: <span class="extype" name="scala.Int">Int</span></span>, <span name="seeds">seeds: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Int">Int</span>)]</span>
       </span>
       
       
     </li><li name="info.kwarc.teaching.AI.Kalah.Tournament#scores" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="scores:scala.collection.mutable.HashMap[info.kwarc.teaching.AI.Kalah.Agent,Int]"></a><a id="scores:HashMap[Agent,Int]"></a>
+      <a id="scores:scala.collection.mutable.HashMap[String,Int]"></a><a id="scores:HashMap[String,Int]"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament.html#scores:scala.collection.mutable.HashMap[info.kwarc.teaching.AI.Kalah.Agent,Int]" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Tournament.html#scores:scala.collection.mutable.HashMap[String,Int]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -580,7 +596,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">scores</span><span class="result">: <span class="extype" name="scala.collection.mutable.HashMap">HashMap</span>[<a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a>, <span class="extype" name="scala.Int">Int</span>]</span>
+        <span class="name">scores</span><span class="result">: <span class="extype" name="scala.collection.mutable.HashMap">HashMap</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Int">Int</span>]</span>
       </span>
       
       
