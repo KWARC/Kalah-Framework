@@ -191,8 +191,10 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     case Player2 => Store2
   }
 
-  Player1.init
-  Player2.init
+
+
+  // Player1.init
+  // Player2.init
 
   private def playerMove(pl : Player,showboard : Boolean) : String = {
     var ret = ""
@@ -240,6 +242,25 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     * @return A pair of integers representing the scores of players 1 and 2
     */
   def play(showboard : Boolean = false) : (Int,Int) = {
+    try {
+      Await.result(Future {
+        Player1.init
+      }, 10 seconds)
+    } catch {
+      case e : java.util.concurrent.TimeoutException =>
+        println(Player1.pl.name + " timed out during initialization!")
+        return (0,1)
+    }
+    try {
+      Await.result(Future {
+        Player2.init
+      }, 10 seconds)
+    } catch {
+      case e : java.util.concurrent.TimeoutException =>
+        println(Player2.pl.name + " timed out during initialization!")
+        return (1,0)
+    }
+
     var i = 1
     try {
       while (finished.isEmpty) {
@@ -258,9 +279,9 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
         println("Player2 made illegal move")
         (Store1.get + 1, 0)
     }
-
-    print("\rRound " + i + " Score: " + GameBoard.p1Store + " : " + GameBoard.p2Store + "\n")
+    val (sc1,sc2) = if (finished contains Player1) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
+    print("\rFinished in round " + i + ". Final score: " + sc1 + " : " + sc2 + "\n")
     if (showboard) println(GameBoard.toString)
-    if (finished contains Player1) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
+    (sc1,sc2)
   }
 }
