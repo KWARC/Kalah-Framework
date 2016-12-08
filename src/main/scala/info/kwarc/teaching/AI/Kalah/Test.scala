@@ -21,7 +21,7 @@ object Test {
 class Tournament {
 
   def players : List[Agent] = List(
-    new HumanPlayer("Yo"),
+    new RandomPlayer("R1"),
     new RandomPlayer("R2"),
     new RandomPlayer("R3"),
     new TimeOut
@@ -29,11 +29,11 @@ class Tournament {
 
   val scores = mutable.HashMap(players.map(p => (p.name,0)):_*)
 
-  def run(houses: Int, seeds : Int) = {
+  def run(houses: Int, seeds : Int, showboard : Boolean = false) = {
     players foreach (p => {
       players foreach (q => if (p.name!=q.name) {
         println(p.name + " vs. " + q.name)
-        val result = (new Game(p,q)(houses,seeds)).play(false)
+        val result = (new Game(p,q)(houses,seeds)).play(showboard)
         if (result._1 > result._2) {
           println(p.name + " wins!")
           scores(p.name)+= houses

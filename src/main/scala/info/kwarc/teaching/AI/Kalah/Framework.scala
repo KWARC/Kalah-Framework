@@ -218,6 +218,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       */
     // println(move)
     if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl)
+    if (showboard) println(pl.pl.name + ": House " + move)
     var index = HouseIndex(pl,move)
     val counter = index.pull
     (1 to counter) foreach (_ => {
