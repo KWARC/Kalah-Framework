@@ -21,7 +21,7 @@ object Test {
 class Tournament {
 
   def players : List[Agent] = List(
-    new RandomPlayer("R1"),
+    new HumanPlayer("Yo"),
     new RandomPlayer("R2"),
     new RandomPlayer("R3"),
     new TimeOut
@@ -31,7 +31,7 @@ class Tournament {
 
   def run(houses: Int, seeds : Int) = {
     players foreach (p => {
-      players foreach (q => if (p!=q) {
+      players foreach (q => if (p.name!=q.name) {
         println(p.name + " vs. " + q.name)
         val result = (new Game(p,q)(houses,seeds)).play(false)
         if (result._1 > result._2) {
