@@ -4,6 +4,7 @@ import scala.collection.mutable
 import scala.concurrent._
 import scala.concurrent.duration._
 import ExecutionContext.Implicits.global
+import collection.JavaConverters._
 
 
 /**
@@ -22,7 +23,7 @@ abstract class Board(val houses : Int, val initSeeds : Int) {
     *         3) The number of seeds in Player 1's store
     *         4) The number of seeds in Player 2's store
     */
-  def getState : (List[Int],List[Int],Int,Int)
+  def getState : java.lang.Iterable[Any]
 
   /**
     * The seeds in each house of some Player
@@ -30,7 +31,7 @@ abstract class Board(val houses : Int, val initSeeds : Int) {
     *           its own houses with no parameters
     * @return the list of seeds for each house.
     */
-  def getHouses(implicit ag : Agent) : List[Int]
+  def getHouses(implicit ag : Agent) : java.lang.Iterable[Int]
 
   /**
     * Gives the number of seeds in a specific house
@@ -81,7 +82,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       case Player2.pl => valuelist(Player2)
     }
 
-    def getState = (valuelist(Player1),valuelist(Player2),p1Store,p2Store)
+    def getState = List(valuelist(Player1).asJava,valuelist(Player2).asJava,p1Store,p2Store).asJava
     def getSeed(player : Int, house : Int) : Int = {
       require(player ==1 || player == 2)
       require(house >= 1 && house <= houses)

@@ -1,15 +1,18 @@
 package info.kwarc.teaching.AI.Kalah
 
 import scala.util.Random
+import collection.JavaConverters._
 
 /**
-  * The abstract class for agents.
+  * The abstract class for agents. Needs to implement four things:
   *
-  * @param name     : What you call your agent (just for fun). Please make this one fixed (unlike in the example
+  * name     : What you call your agent (just for fun). Please make this one fixed (unlike in the example
   *                   below)
-  * @param students : Please put your full names in this list.
+  * students : Please put your full names in this list.
   */
-abstract class Agent(val name : String, val students : List[String]) {
+abstract class Agent {
+  val name : String
+  val students : java.lang.Iterable[String]
   implicit val me = this
   /**
     * is called once at the start of a game.
@@ -30,7 +33,8 @@ abstract class Agent(val name : String, val students : List[String]) {
   * A human player that reads actions (as field numbers) from stdin. Can be used to test your agents.
   * @param name     : What you call your agent (just for fun).
   */
-class HumanPlayer(name : String) extends Agent(name,List("Dennis")) {
+class HumanPlayer(val name : String) extends Agent {
+  val students = List("Dennis").asJava
   private var currentboard : Board = null
   private var playerone = None.asInstanceOf[Option[Boolean]]
 
@@ -48,7 +52,8 @@ class HumanPlayer(name : String) extends Agent(name,List("Dennis")) {
   }
 }
 
-class RandomPlayer(name : String) extends Agent(name,List("Dennis")) {
+class RandomPlayer(val name : String) extends Agent {
+  val students = List("Dennis").asJava
   private var currentboard : Board = null
 
   def init(board : Board, playerOne : Boolean): Unit = {
