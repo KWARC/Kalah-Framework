@@ -280,7 +280,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
         println("Player2 made illegal move")
         (Store1.get + 1, 0)
     }
-    val (sc1,sc2) = if (finished contains Player1) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
+    val (sc1,sc2) = if (finished == Some(Player1)) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
     print("\rFinished in round " + i + ". Final score: " + sc1 + " : " + sc2 + "\n")
     if (showboard) println(GameBoard.toString)
     (sc1,sc2)
