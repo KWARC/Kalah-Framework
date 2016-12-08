@@ -86,8 +86,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     def getSeed(player : Int, house : Int) : Int = {
       require(player ==1 || player == 2)
       require(house >= 1 && house <= houses)
-      if (player == 1) p1Houses(house-1)
-      else if (player == 2) p2Houses(house-1)
+      if (player == 1) p1Houses(house)
+      else if (player == 2) p2Houses(house)
       else throw new Error("Player number not in [1,2]")
     }
     def getScore(player : Int): Int = {
