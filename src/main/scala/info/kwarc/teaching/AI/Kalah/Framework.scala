@@ -77,9 +77,9 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     }
 
 
-    def getHouses(implicit ag : Agent) : List[Int] = ag match {
-      case Player1.pl => valuelist(Player1)
-      case Player2.pl => valuelist(Player2)
+    def getHouses(implicit ag : Agent) : java.lang.Iterable[Int] = ag match {
+      case Player1.pl => valuelist(Player1).asJava
+      case Player2.pl => valuelist(Player2).asJava
     }
 
     def getState = List(valuelist(Player1).asJava,valuelist(Player2).asJava,p1Store,p2Store).asJava

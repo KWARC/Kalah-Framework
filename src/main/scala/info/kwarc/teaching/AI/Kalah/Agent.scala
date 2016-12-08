@@ -62,9 +62,9 @@ class RandomPlayer(val name : String) extends Agent {
   def move : Int = {
     val ls = currentboard.getHouses
     val rnd = new Random
-    var i = rnd.nextInt(ls.length /* + 1*/)
-    while (/* i > 0 && */ ls(i /* -1 */ ) == 0) {
-      i = rnd.nextInt(ls.length /* + 1 */)
+    var i = rnd.nextInt(ls.asScala.size /* + 1*/)
+    while (/* i > 0 && */ ls.asScala.toList(i /* -1 */ ) == 0) {
+      i = rnd.nextInt(ls.asScala.size /* + 1 */)
     }
     /*
     if (i == 0) {
@@ -74,7 +74,9 @@ class RandomPlayer(val name : String) extends Agent {
   }
 }
 
-class TimeOut extends Agent("Timeouter",List("Dennis")) {
+class TimeOut extends Agent/*("Timeouter",List("Dennis"))*/ {
+  val name = "Timeouter"
+  val students = List("Dennis").asJava
   private var currentboard : Board = null
 
   def init(board : Board, playerOne : Boolean): Unit = {
