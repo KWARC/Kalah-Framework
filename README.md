@@ -1,9 +1,9 @@
 # Kalah-WS1617
 Kalah framework for the AI course at FAU WS16/17
 
-`target/scala-2.12/kalah_2.12-1.0-javadoc.jar` and
-`target/scala-2.12/api` contain the documentation,
-`src` contains source files in scala and (thanks to Marcel) java interfaces so you don't have to take care of converting scala datastructures.
+- `target/scala-2.12/kalah_2.12-1.0-javadoc.jar` and
+- `target/scala-2.12/api` contain the documentation,
+- `src` contains source files in scala and (thanks to Marcel) java interfaces so you don't have to take care of converting scala datastructures.
 
 To implement your own agent, create a new class/object extending [[info.kwarc.teaching.AI.Kalah.Agent]]
 and implement the required methods (init and move). For details see the documentation.
