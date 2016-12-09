@@ -83,9 +83,11 @@ class TimeOut extends Agent/*("Timeouter",List("Dennis"))*/ {
   def init(board : Board, playerOne : Boolean): Unit = {
     currentboard = board
     Thread.sleep(11000)
+    println("Woke up!")
   }
   def move : Int = {
-    Thread.sleep(10000)
+    Thread.sleep(8000)
+    println("Woke up!")
     0
   }
 }

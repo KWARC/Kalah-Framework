@@ -6,6 +6,26 @@ import scala.concurrent.duration._
 import ExecutionContext.Implicits.global
 import collection.JavaConverters._
 
+class AgentContext extends AnyRef with ExecutionContext {
+  import ExecutionContext.Implicits.global
+
+  @volatile var lastThread: Option[Thread] = None
+
+  override def execute(runnable: Runnable): Unit = {
+    global.execute(new Runnable() {
+      override def run(): Unit = try {
+        lastThread = Some(Thread.currentThread())
+        runnable.run()
+      } catch {
+        case t : java.lang.ThreadDeath =>
+        case cause => throw cause
+      }
+    })
+  }
+
+  override def reportFailure(cause: Throwable): Unit = throw cause
+
+}
 
 /**
   * Abstract class representing a game board. [[Game]] uses its own private extension of this class, as to prevent
@@ -203,6 +223,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       println(pl + ": ")
       println(GameBoard.toString)
     }
+    implicit val exec = new AgentContext
     val move = try {
       Await.result(Future {
         pl.move
@@ -210,6 +231,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         ret = pl.pl.name + " timed out!"
+        exec.lastThread.getOrElse(throw new RuntimeException("Error killing thread: No thread started")).stop()
+        println("Killed thread!")
         pl.pl.timeoutMove
     }
       /*
@@ -244,6 +267,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     * @return A pair of integers representing the scores of players 1 and 2
     */
   def play(showboard : Boolean = false) : (Int,Int) = {
+    implicit var exec = new AgentContext
     try {
       Await.result(Future {
         Player1.init
@@ -251,8 +275,11 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         println(Player1.pl.name + " timed out during initialization!")
+        exec.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
+        println("Killed thread!")
         return (0,1)
     }
+    exec = new AgentContext
     try {
       Await.result(Future {
         Player2.init
@@ -260,6 +287,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         println(Player2.pl.name + " timed out during initialization!")
+        exec.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
+        println("Killed thread!")
         return (1,0)
     }
 
