@@ -210,7 +210,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         ret = pl.pl.name + " timed out!"
-        (1 to houses).find(i => HouseIndex(pl,i).get > 0).get
+        pl.pl.timeoutMove
     }
       /*
       val move = future { pl.move }

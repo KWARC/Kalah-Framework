@@ -178,6 +178,14 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="Converter.html" title="A static class to make communication between scala and Java code easier
+"></a>
+                        <a href="Converter.html" title="A static class to make communication between scala and Java code easier
+">
+                          Converter
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="class" href="Game.html" title="Allows to play one game between two Agents."></a>
                         <a href="Game.html" title="Allows to play one game between two Agents.">
                           Game
@@ -196,8 +204,8 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="object" href="Test$.html" title="Created by jazzpirate on 08.11.16."></a>
-                        <a href="Test$.html" title="Created by jazzpirate on 08.11.16.">
+                        <a class="object" href="Test$.html" title=""></a>
+                        <a href="Test$.html" title="">
                           Test
                         </a>
                       </li><li class="current-entities indented5">
@@ -211,6 +219,12 @@
                         <a class="class" href="Tournament.html" title=""></a>
                         <a href="Tournament.html" title="">
                           Tournament
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="class" href="VictoryPlayer.html" title=""></a>
+                        <a href="VictoryPlayer.html" title="">
+                          VictoryPlayer
                         </a>
                       </li>
               </ul>
@@ -552,7 +566,9 @@
       </span>
       
       <p class="shortcomment cmt">This method is called by <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">Game</a> to request an action.</p><div class="fullcomment"><div class="comment cmt"><p>This method is called by <a href="Game.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Game">Game</a> to request an action. Note that you have <b>at most</b> 5sec to
-return an action; otherwise the thread is aborted and a random non-empty house chosen.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>An integer between 1 and n representing the house to play.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="info.kwarc.teaching.AI.Kalah.HumanPlayer">HumanPlayer</a> → <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></dd></dl></div>
+return an action; otherwise the thread is aborted and the timeoutMove variable (by default=1) is chosen.
+So you can use the full 5 seconds to constantly revise that variable.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="info.kwarc.teaching.AI.Kalah.HumanPlayer">HumanPlayer</a> → <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></dd></dl></div>
     </li><li name="info.kwarc.teaching.AI.Kalah.HumanPlayer#name" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
       <span class="permalink">
@@ -649,6 +665,22 @@ return an action; otherwise the thread is aborted and a random non-empty house c
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="info.kwarc.teaching.AI.Kalah.Agent#timeoutMove" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="timeoutMove:Int"></a>
+      <span class="permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/HumanPlayer.html#timeoutMove:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">timeoutMove</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">

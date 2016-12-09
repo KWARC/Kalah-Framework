@@ -1,3 +1,5 @@
+package info.kwarc.teaching.AI.Kalah;
+
 import java.util.ArrayList;
 
 public class VictoryPlayer extends Agent

@@ -1,3 +1,5 @@
+package info.kwarc.teaching.AI.Kalah;
+
 import scala.Tuple4;
 import java.util.ArrayList;
 

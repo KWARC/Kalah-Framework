@@ -23,10 +23,11 @@ abstract class Agent {
 
   /**
     * This method is called by [[Game]] to request an action. Note that you have <b>at most</b> 5sec to
-    * return an action; otherwise the thread is aborted and a random non-empty house chosen.
-    * @return An integer between 1 and n representing the house to play.
+    * return an action; otherwise the thread is aborted and the timeoutMove variable (by default=1) is chosen.
+    * So you can use the full 5 seconds to constantly revise that variable.
     */
   def move : Int
+  var timeoutMove : Int = 1
 }
 
 /**
