@@ -1,9 +1,9 @@
 package info.kwarc.teaching.AI.Kalah
 
+import java.io._
 import scala.collection.mutable
 import scala.concurrent._
 import scala.concurrent.duration._
-import ExecutionContext.Implicits.global
 import collection.JavaConverters._
 
 class AgentContext extends AnyRef with ExecutionContext {
@@ -217,20 +217,25 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
   // Player1.init
   // Player2.init
 
-  private def playerMove(pl : Player,showboard : Boolean) : String = {
-    var ret = ""
+  private def playerMove(pl : Player,showboard : Boolean) : Unit = {
     if (showboard) {
       println(pl + ": ")
       println(GameBoard.toString)
-    }
-    val move = try {
-      Await.result(Future(pl.move)(exec), 5 seconds)
-    } catch {
-      case e : java.util.concurrent.TimeoutException =>
-        ret = pl.pl.name + " timed out!"
-        exec.lastThread.getOrElse(throw new RuntimeException("Error killing thread: No thread started")).stop()
-        println("Killed thread!")
-        pl.pl.timeoutMove
+    } else print(".")
+    scala.Console.flush()
+
+    val move = pl.pl match {
+      case hp : HumanPlayer => pl.move
+      case _ => try {
+        Await.result(Future(pl.move)(exec), 5 seconds)
+      } catch {
+        case e : java.util.concurrent.TimeoutException =>
+          if (!showboard) print(".")
+          scala.Console.flush()
+          exec.lastThread.getOrElse(throw new RuntimeException("Error killing thread: No thread started")).stop()
+          // print(" Killed thread!")
+          pl.pl.timeoutMove
+      }
     }
       /*
       val move = future { pl.move }
@@ -238,7 +243,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       */
     // println(move)
     if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl)
-    if (showboard) println(pl.pl.name + ": House " + move)
+    if (showboard) println(pl.pl.name + ": House " + move) else print(".")
+    scala.Console.flush()
     var index = HouseIndex(pl,move)
     val counter = index.pull
     (1 to counter) foreach (_ => {
@@ -249,9 +255,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       store(pl).add(index.pull + HouseIndex(pl.other,houses + 1 - index.hn).pull)
     }
     if (index.pl == pl && index.hn == 0 && (1 to houses).exists(i => HouseIndex(pl,i).get > 0))
-      ret + playerMove(pl,showboard) else {
-      ret
-    }
+      playerMove(pl,showboard)
   }
 
   case class Illegal(pl : Player) extends Throwable
@@ -286,9 +290,11 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     var i = 1
     try {
       while (finished.isEmpty) {
-        val ret = playerMove(Player1, showboard) + {if (finished.isEmpty) playerMove(Player2, showboard) else ""}
+        playerMove(Player1, showboard)
+        if (finished.isEmpty) playerMove(Player2, showboard)
         if (!showboard) {
-          print("\rRound " + i + " Score: " + GameBoard.p1Store + " : " + GameBoard.p2Store + " " + ret)
+          print("\rRound " + i + " Score: " + GameBoard.p1Store + " : " + GameBoard.p2Store)
+          scala.Console.flush()
         }
         i+=1
         // readLine()
@@ -306,4 +312,338 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
         (Store1.get + 1, 0)
     }
   }
+}
+
+abstract class Tournament {
+  val players : List[String] // = List("R1","R2","R3","Jazzpirate")
+  def getPlayer(s : String) : Agent /* = s match {
+    case "R1" => new RandomPlayer ("R1")
+    case "R2" => new RandomPlayer ("R2")
+    case "R3" => new RandomPlayer ("R3")
+    case "Jazzpirate" => new Jazzpirate
+    case _ => throw new Exception("No player with name " + s + " found!")
+  } */
+
+  lazy val scores = mutable.HashMap(players.map(p => (p,0)):_*)
+
+  def run(houses: Int, seeds : Int, showboard : Boolean = false) = {
+    players foreach (p => {
+      players foreach (q => if (p!=q) {
+        println(p + " vs. " + q)
+        val result = (new Game(getPlayer(p),getPlayer(q))(houses,seeds)).play(showboard)
+        if (result._1 > result._2) {
+          println(p + " wins!")
+          scores(p)+= houses
+        }
+        else if (result._2 > result._1) {
+          println(q + " wins!")
+          scores(q) += houses
+        }
+      })
+    })
+    scores.toList.sortBy(_._2).reverse
+  }
+  import utils._
+
+  def readFromFile(f : File) = {
+    scores.clear()
+    val scs = File.read(f).split("\n").filterNot(_.isEmpty).map(_.split(" -score- "))
+    scs foreach (l => scores(l.head) = l.tail.head.toInt)
+    scoreboard
+  }
+  def saveToFile(f : File) = {
+    val scs = scores.map(p => p._1 + " -score- " + p._2).mkString("\n")
+    File.write(f,scs)
+  }
+
+  def scoreboard = {
+    val scs = scores.toList.sortBy(_._2).reverse
+    scs.indices.map(i => i+1 + ": " + scs(i)._1 + "(" + scs(i)._2 + ")").mkString("\n")
+  }
+}
+
+object utils {
+  case class File(toJava: java.io.File) {
+    /** resolves an absolute or relative path string against this */
+    def resolve(s: String): File = {
+      val sf = new java.io.File(s)
+      val newfile = if (sf.isAbsolute)
+        sf
+      else
+        new java.io.File(toJava, s)
+      File(newfile.getCanonicalPath)
+    }
+
+    def canonical = File(toJava.getCanonicalFile)
+
+    /** appends one path segment */
+    def /(s: String): File = File(new java.io.File(toJava, s))
+
+    /** appends a list of path segments */
+    def /(ss: List[String]): File = ss.foldLeft(this) { case (sofar, next) => sofar / next }
+
+    /** appends a relative path */
+    def /(ss: FilePath): File = this / ss.segments
+
+    /** parent directory */
+    def up: File = {
+      val par = Option(toJava.getParentFile)
+      if (par.isEmpty) this else File(par.get)
+    }
+
+    def isRoot = up == this
+
+    /** file name */
+    def name: String = toJava.getName
+
+    /** segments as a FilePath
+      */
+    def toFilePath = FilePath(segments)
+
+    /** the list of file/directory/volume label names making up this file path
+      * an absolute Unix paths begin with an empty segment
+      */
+    def segments: List[String] = {
+      val name = toJava.getName
+      val par = Option(toJava.getParentFile)
+      if (par.isEmpty)
+        if (name.isEmpty) if (toString.nonEmpty) List(toString.init) else Nil
+        else List(name) // name == "" iff this File is a root
+      else
+        File(par.get).segments ::: List(name)
+    }
+
+    def isAbsolute: Boolean = toJava.isAbsolute
+
+    override def toString = toJava.toString
+
+    /** @return the last file extension (if any) */
+    def getExtension: Option[String] = {
+      val name = toJava.getName
+      val posOfDot = name.lastIndexOf(".")
+      if (posOfDot == -1) None else Some(name.substring(posOfDot + 1))
+    }
+
+    /** sets the file extension (replaces existing extension, if any) */
+    def setExtension(ext: String): File = getExtension match {
+      case None => File(toString + "." + ext)
+      case Some(s) => File(toString.substring(0, toString.length - s.length) + ext)
+    }
+
+    /** appends a file extension (possibly resulting in multiple extensions) */
+    def addExtension(ext: String): File = getExtension match {
+      case None => setExtension(ext)
+      case Some(e) => setExtension(e + "." + ext)
+    }
+
+    /** removes the last file extension (if any) */
+    def stripExtension: File = getExtension match {
+      case None => this
+      case Some(s) => File(toString.substring(0, toString.length - s.length - 1))
+    }
+
+    /** @return children of this directory */
+    def children: List[File] = if (toJava.isFile) Nil else toJava.list.toList.sorted.map(this / _)
+
+    /** @return subdirectories of this directory */
+    def subdirs: List[File] = children.filter(_.toJava.isDirectory)
+
+    /** @return all files in this directory or any subdirectory */
+    def descendants: List[File] = children.flatMap {c =>
+      if (c.isDirectory) c.descendants else List(c)
+    }
+
+    /** @return true if that begins with this */
+    def <=(that: File) = that.segments.startsWith(segments)
+
+    /** delete this, recursively if directory */
+    def deleteDir {
+      children foreach {c =>
+        if (c.isDirectory) c.deleteDir
+        else c.toJava.delete
+      }
+      toJava.delete
+    }
+  }
+
+  /** a relative file path usually within an archive below a dimension */
+  case class FilePath(segments: List[String]) {
+    def toFile = File(toString)
+
+    def name: String = if (segments.nonEmpty) segments.last else ""
+
+    def dirPath = FilePath(if (segments.nonEmpty) segments.init else Nil)
+
+    /** append a segment */
+    def /(s: String): FilePath = FilePath(segments ::: List(s))
+
+    override def toString: String = segments.mkString("/")
+
+    def getExtension = toFile.getExtension
+    def setExtension(e: String) = toFile.setExtension(e).toFilePath
+    def stripExtension = toFile.stripExtension.toFilePath
+  }
+
+  object EmptyPath extends FilePath(Nil)
+
+  object FilePath {
+    def apply(s:String): FilePath = FilePath(List(s))
+    implicit def filePathToList(fp: FilePath) = fp.segments
+    implicit def listToFilePath(l: List[String]) = FilePath(l)
+
+    def getall(f : File) : List[File] = rec(List(f))
+
+    private def rec(list : List[File]) : List[File] = list.flatMap(f => if (f.isDirectory) rec(f.children) else List(f))
+  }
+
+  /** MMT's default way to write to files; uses buffering, UTF-8, and \n */
+  class StandardPrintWriter(f: File) extends
+    OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(f.toJava)),
+      java.nio.charset.Charset.forName("UTF-8")) {
+    def println(s: String): Unit = {
+      write(s + "\n")
+    }
+  }
+
+  /** This defines some very useful methods to interact with text files at a high abstraction level. */
+  object File {
+    /** constructs a File from a string, using the java.io.File parser */
+    def apply(s: String): File = File(new java.io.File(s))
+
+    def Writer(f: File): StandardPrintWriter = {
+      f.up.toJava.mkdirs
+      new StandardPrintWriter(f)
+    }
+
+    /**
+      * convenience method for writing a string into a file
+      *
+      * overwrites existing files, creates directories if necessary
+      * @param f the target file
+      * @param strings the content to write
+      */
+    def write(f: File, strings: String*) {
+      val fw = Writer(f)
+      strings.foreach { s => fw.write(s) }
+      fw.close
+    }
+
+
+    /**
+      * streams a list-like object to a file
+      * @param f the file to write to
+      * @param begin initial text
+      * @param sep text in between elements
+      * @param end terminal text
+      * @param work bind a variable "write" and call it to write into the file
+      * example: (l: List[Node]) => stream(f, "<root>", "\n", "</root>"){out => l map {a => out(a.toString)}}
+      */
+    def stream(f: File, begin: String = "", sep: String = "", end: String="")(work: (String => Unit) => Unit) = {
+      val fw = Writer(f)
+      fw.write(begin)
+      var writeSep = false
+      def out(s: String) {
+        if (writeSep)
+          fw.write(sep)
+        else
+          writeSep = true
+        fw.write(s)
+      }
+      try {
+        work(out)
+        fw.write(end)
+      } finally {
+        fw.close
+      }
+    }
+
+    /**
+      * convenience method for writing a list of lines into a file
+      *
+      * overwrites existing files, creates directories if necessary
+      * @param f the target file
+      * @param lines the lines (without line terminator - will be chosen by Java and appended)
+      */
+    def WriteLineWise(f: File, lines: List[String]) {
+      val fw = Writer(f)
+      lines.foreach {l =>
+        fw.println(l)
+      }
+      fw.close
+    }
+
+    /**
+      * convenience method for reading a file into a string
+      *
+      * @param f the source file
+      * @return s the file content (line terminators are \n)
+      */
+    def read(f: File): String = {
+      val s = new StringBuilder
+      ReadLineWise(f) {l => s.append(l + "\n")}
+      s.result
+    }
+
+    /** convenience method to obtain a typical (buffered, UTF-8) reader for a file */
+    def Reader(f: File): BufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(f.toJava),
+      java.nio.charset.Charset.forName("UTF-8")))
+
+    /** convenience method to read a file line by line
+      * @param f the file
+      * @param proc a function applied to every line (without line terminator)
+      */
+    def ReadLineWise(f: File)(proc: String => Unit) {
+      val r = Reader(f)
+      var line: Option[String] = None
+      try {
+        while ( {
+          line = Option(r.readLine)
+          line.isDefined
+        })
+          proc(line.get)
+      } finally {
+        r.close
+      }
+    }
+
+    def readProperties(manifest: File): mutable.Map[String, String] = {
+      val properties = new scala.collection.mutable.ListMap[String, String]
+      File.ReadLineWise(manifest) { case line =>
+        // usually continuation lines start with a space but we ignore those
+        val tline = line.trim
+        if (!tline.startsWith("//")) {
+          val p = tline.indexOf(":")
+          if (p > 0) {
+            // make sure line contains colon and the key is non-empty
+            val key = tline.substring(0, p).trim
+            val value = tline.substring(p + 1).trim
+            properties(key) = properties.get(key) match {
+              case None => value
+              case Some(old) => old + " " + value
+            }
+          }
+        }
+      }
+      properties
+    }
+
+    /** copies a file */
+    def copy(from: File, to: File, replace: Boolean): Boolean = {
+      if (!from.exists || (to.exists && !replace)) {
+        false
+      } else {
+        to.getParentFile.mkdirs
+        val opt = if (replace) List(java.nio.file.StandardCopyOption.REPLACE_EXISTING) else Nil
+        java.nio.file.Files.copy(from.toPath, to.toPath, opt:_*)
+        true
+      }
+    }
+
+    /** implicit conversion Java <-> Scala */
+    implicit def scala2Java(file: File): java.io.File = file.toJava
+
+    /** implicit conversion Java <-> Scala */
+    implicit def java2Scala(file: java.io.File): File = File(file)
+  }
+
 }
