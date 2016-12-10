@@ -27,7 +27,7 @@ abstract class Agent {
     * So you can use the full 5 seconds to constantly revise that variable.
     */
   def move : Int
-  var timeoutMove : Int = 1
+  @volatile var timeoutMove : Int = 1
 }
 
 /**
@@ -71,7 +71,9 @@ class RandomPlayer(val name : String) extends Agent {
     if (i == 0) {
       Thread.sleep(10000)
       0
-    } else */ i + 1
+    } else */
+    timeoutMove = i + 1
+    i + 1
   }
 }
 

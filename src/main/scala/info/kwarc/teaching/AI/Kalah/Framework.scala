@@ -1,11 +1,11 @@
 package info.kwarc.teaching.AI.Kalah
 
 import java.io._
-import scala.collection.mutable
-import scala.concurrent._
-import scala.concurrent.duration._
-import collection.JavaConverters._
+import java.time.Instant
 
+import scala.collection.mutable
+import collection.JavaConverters._
+/*
 class AgentContext extends AnyRef with ExecutionContext {
   import ExecutionContext.Implicits.global
 
@@ -18,7 +18,7 @@ class AgentContext extends AnyRef with ExecutionContext {
         runnable.run()
       } catch {
         case t : java.lang.ThreadDeath =>
-        case cause => throw cause
+        case cause : Throwable => throw cause
       }
     })
   }
@@ -26,7 +26,7 @@ class AgentContext extends AnyRef with ExecutionContext {
   override def reportFailure(cause: Throwable): Unit = throw cause
 
 }
-
+*/
 /**
   * Abstract class representing a game board. [[Game]] uses its own private extension of this class, as to prevent
   * cheating. Accessible values are:
@@ -154,17 +154,15 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
   sealed abstract class Player {
     val pl : Agent
     def move : Int = pl.move
-    def init : Unit
+    def init = AgentAction.init(pl,GameBoard,true,10000)//pl.init(GameBoard,true)
     def other : Player
   }
   private case object Player1 extends Player {
     val pl = p1
-    def init = pl.init(GameBoard,true)
     def other = Player2
   }
   private case object Player2 extends Player {
     val pl = p2
-    def init = pl.init(GameBoard,false)
     def other = Player1
   }
 
@@ -212,7 +210,6 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     case Player2 => Store2
   }
 
-  val exec = new AgentContext
 
   // Player1.init
   // Player2.init
@@ -221,30 +218,31 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     if (showboard) {
       println(pl + ": ")
       println(GameBoard.toString)
-    } else print(".")
-    scala.Console.flush()
-
+    } // else print(".")
+    // val exec = new AgentContext
+    // val t1 = Instant.now()
     val move = pl.pl match {
       case hp : HumanPlayer => pl.move
       case _ => try {
-        Await.result(Future(pl.move)(exec), 5 seconds)
+        AgentAction.move(pl.pl,5000)
+        //Await.result(Future(pl.move)(exec), 5 seconds)
       } catch {
         case e : java.util.concurrent.TimeoutException =>
+          // println(java.time.Duration.between(t1,Instant.now()))
+          pl.pl.timeoutMove
+          /*
           if (!showboard) print(".")
           scala.Console.flush()
           exec.lastThread.getOrElse(throw new RuntimeException("Error killing thread: No thread started")).stop()
+          val ret = pl.pl.timeoutMove
           // print(" Killed thread!")
-          pl.pl.timeoutMove
+          ret
+          */
       }
     }
-      /*
-      val move = future { pl.move }
-      Await.result(move, 5 seconds)
-      */
-    // println(move)
+    // println(java.time.Duration.between(t1,Instant.now) + ": After catch")
     if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl)
-    if (showboard) println(pl.pl.name + ": House " + move) else print(".")
-    scala.Console.flush()
+    if (showboard) println(pl.pl.name + ": House " + move) // else print(".")
     var index = HouseIndex(pl,move)
     val counter = index.pull
     (1 to counter) foreach (_ => {
@@ -268,21 +266,25 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     * @return A pair of integers representing the scores of players 1 and 2
     */
   def play(showboard : Boolean = false) : (Int,Int) = {
+    //val exec1 = new AgentContext
     try {
-      Await.result(Future(Player1.init)(exec), 10 seconds)
+      Player1.init
+      //Await.result(Future(Player1.init)(exec1), 10 seconds)
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         println(Player1.pl.name + " timed out during initialization!")
-        exec.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
+        //exec1.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
         println("Killed thread!")
         return (0,1)
     }
+    //val exec2 = new AgentContext
     try {
-      Await.result(Future(Player2.init)(exec), 10 seconds)
+      //Await.result(Future(Player2.init)(exec2), 10 seconds)
+      Player2.init
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         println(Player2.pl.name + " timed out during initialization!")
-        exec.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
+        //exec2.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
         println("Killed thread!")
         return (1,0)
     }
@@ -294,7 +296,6 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
         if (finished.isEmpty) playerMove(Player2, showboard)
         if (!showboard) {
           print("\rRound " + i + " Score: " + GameBoard.p1Store + " : " + GameBoard.p2Store)
-          scala.Console.flush()
         }
         i+=1
         // readLine()
@@ -645,5 +646,4 @@ object utils {
     /** implicit conversion Java <-> Scala */
     implicit def java2Scala(file: java.io.File): File = File(file)
   }
-
 }
