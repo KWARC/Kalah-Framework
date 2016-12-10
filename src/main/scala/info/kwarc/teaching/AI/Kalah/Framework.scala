@@ -212,7 +212,7 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     case Player2 => Store2
   }
 
-
+  val exec = new AgentContext
 
   // Player1.init
   // Player2.init
@@ -223,11 +223,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
       println(pl + ": ")
       println(GameBoard.toString)
     }
-    implicit val exec = new AgentContext
     val move = try {
-      Await.result(Future {
-        pl.move
-      }, 5 seconds)
+      Await.result(Future(pl.move)(exec), 5 seconds)
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         ret = pl.pl.name + " timed out!"
@@ -267,11 +264,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     * @return A pair of integers representing the scores of players 1 and 2
     */
   def play(showboard : Boolean = false) : (Int,Int) = {
-    implicit var exec = new AgentContext
     try {
-      Await.result(Future {
-        Player1.init
-      }, 10 seconds)
+      Await.result(Future(Player1.init)(exec), 10 seconds)
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         println(Player1.pl.name + " timed out during initialization!")
@@ -279,11 +273,8 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
         println("Killed thread!")
         return (0,1)
     }
-    exec = new AgentContext
     try {
-      Await.result(Future {
-        Player2.init
-      }, 10 seconds)
+      Await.result(Future(Player2.init)(exec), 10 seconds)
     } catch {
       case e : java.util.concurrent.TimeoutException =>
         println(Player2.pl.name + " timed out during initialization!")
