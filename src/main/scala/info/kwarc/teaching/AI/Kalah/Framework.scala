@@ -1,32 +1,10 @@
 package info.kwarc.teaching.AI.Kalah
 
 import java.io._
-import java.time.Instant
 
 import scala.collection.mutable
 import collection.JavaConverters._
-/*
-class AgentContext extends AnyRef with ExecutionContext {
-  import ExecutionContext.Implicits.global
 
-  @volatile var lastThread: Option[Thread] = None
-
-  override def execute(runnable: Runnable): Unit = {
-    global.execute(new Runnable() {
-      override def run(): Unit = try {
-        lastThread = Some(Thread.currentThread())
-        runnable.run()
-      } catch {
-        case t : java.lang.ThreadDeath =>
-        case cause : Throwable => throw cause
-      }
-    })
-  }
-
-  override def reportFailure(cause: Throwable): Unit = throw cause
-
-}
-*/
 /**
   * Abstract class representing a game board. [[Game]] uses its own private extension of this class, as to prevent
   * cheating. Accessible values are:
@@ -79,7 +57,7 @@ abstract class Board(val houses : Int, val initSeeds : Int) {
   * @param houses     : The number of houses per player (see [[Board]])
   * @param initSeeds  : The number of initial seeds per house (see [[Board]])
   */
-class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
+class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initSeeds : Int = 6) {
 
   private object GameBoard extends Board(houses,initSeeds) {
     val p1Houses = mutable.HashMap.empty[Int,Int]
@@ -212,50 +190,30 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     case Player2 => Store2
   }
 
-
-  // Player1.init
-  // Player2.init
-
-  private def playerMove(pl : Player,showboard : Boolean) : Unit = {
-    if (showboard) {
-      println(pl + ": ")
-      println(GameBoard.toString)
-    } // else print(".")
-    // val exec = new AgentContext
-    // val t1 = Instant.now()
+  private def playerMove(pl : Player) : Unit = {
+    interface.playerMove(pl == Player1)
     val move = pl.pl match {
       case hp : HumanPlayer => pl.move
       case _ => try {
         AgentAction.move(pl.pl,5000)
-        //Await.result(Future(pl.move)(exec), 5 seconds)
       } catch {
         case e : java.util.concurrent.TimeoutException =>
-          // println(java.time.Duration.between(t1,Instant.now()))
           pl.pl.timeoutMove
-          /*
-          if (!showboard) print(".")
-          scala.Console.flush()
-          exec.lastThread.getOrElse(throw new RuntimeException("Error killing thread: No thread started")).stop()
-          val ret = pl.pl.timeoutMove
-          // print(" Killed thread!")
-          ret
-          */
       }
     }
-    // println(java.time.Duration.between(t1,Instant.now) + ": After catch")
     if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl)
-    if (showboard) println(pl.pl.name + ": House " + move) // else print(".")
+    interface.chosenMove(move,pl == Player1)
     var index = HouseIndex(pl,move)
     val counter = index.pull
     (1 to counter) foreach (_ => {
       index = index.next(pl)
       index.++
     })
-    if (index.pl == pl && index.get == 1 && index.hn != 0) {
+    if (index.pl == pl && index.get == 1 && index.hn != 0 && HouseIndex(pl.other,houses + 1 - index.hn).get != 0) {
       store(pl).add(index.pull + HouseIndex(pl.other,houses + 1 - index.hn).pull)
     }
     if (index.pl == pl && index.hn == 0 && (1 to houses).exists(i => HouseIndex(pl,i).get > 0))
-      playerMove(pl,showboard)
+      playerMove(pl)
   }
 
   case class Illegal(pl : Player) extends Throwable
@@ -267,57 +225,48 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
     * Starts one game between (new instances of) Pl1 and Pl2.
     * @return A pair of integers representing the scores of players 1 and 2
     */
-  def play(showboard : Boolean = false) : (Int,Int) = {
-    //val exec1 = new AgentContext
+  def play : (Int,Int) = {
+    interface.newGame(Player1.pl.name,Player2.pl.name,GameBoard)
+    // Thread.sleep(200)
     try {
       Player1.init
-      //Await.result(Future(Player1.init)(exec1), 10 seconds)
     } catch {
       case e : java.util.concurrent.TimeoutException =>
-        println(Player1.pl.name + " timed out during initialization!")
-        //exec1.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
-        println("Killed thread!")
+        interface.timeout(true)
         return (0,1)
     }
-    //val exec2 = new AgentContext
     try {
-      //Await.result(Future(Player2.init)(exec2), 10 seconds)
       Player2.init
     } catch {
       case e : java.util.concurrent.TimeoutException =>
-        println(Player2.pl.name + " timed out during initialization!")
-        //exec2.lastThread.getOrElse(throw new RuntimeException("Error killing Thread: No Thread started")).stop()
-        println("Killed thread!")
+        interface.timeout(false)
         return (1,0)
     }
-
-    var i = 1
     try {
       while (finished.isEmpty) {
-        playerMove(Player1, showboard)
-        if (finished.isEmpty) playerMove(Player2, showboard)
-        if (!showboard) {
-          print("\rRound " + i + " Score: " + GameBoard.p1Store + " : " + GameBoard.p2Store)
-        }
-        i+=1
-        // readLine()
+        playerMove(Player1)
+        // Thread.sleep(200)
+        if (finished.isEmpty) playerMove(Player2)
+        // Thread.sleep(200)
+        interface.endOfRound
+        // Thread.sleep(200)
       }
       val (sc1,sc2) = if (finished == Some(Player1)) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
-      print("\rFinished in round " + i + ". Final score: " + sc1 + " : " + sc2 + "\n")
-      if (showboard) println(GameBoard.toString)
+      interface.gameResult(sc1,sc2)
       (sc1,sc2)
     } catch {
       case Illegal(Player1) =>
-        println("Player1 made illegal move")
+        interface.illegal(true)
         (0,Store2.get + 1)
       case Illegal(Player2) =>
-        println("Player2 made illegal move")
+        interface.illegal(false)
         (Store1.get + 1, 0)
     }
   }
 }
 
 abstract class Tournament {
+  val interface : Interface
   val players : List[String] // = List("R1","R2","R3","Jazzpirate")
   def getPlayer(s : String) : Agent /* = s match {
     case "R1" => new RandomPlayer ("R1")
@@ -332,19 +281,18 @@ abstract class Tournament {
   def run(houses: Int, seeds : Int, showboard : Boolean = false) = {
     players foreach (p => {
       players foreach (q => if (p!=q) {
-        println(p + " vs. " + q)
-        val result = (new Game(getPlayer(p),getPlayer(q))(houses,seeds)).play(showboard)
+        val result = (new Game(getPlayer(p),getPlayer(q),interface)(houses,seeds)).play
         if (result._1 > result._2) {
-          println(p + " wins!")
           scores(p)+= houses
         }
         else if (result._2 > result._1) {
-          println(q + " wins!")
           scores(q) += houses
         }
       })
     })
-    scores.toList.sortBy(_._2).reverse
+    val ret = scores.toList.sortBy(_._2).reverse
+    interface.scoreboard(ret)
+    ret
   }
   import utils._
 
@@ -352,20 +300,17 @@ abstract class Tournament {
     scores.clear()
     val scs = File.read(f).split("\n").filterNot(_.isEmpty).map(_.split(" -score- "))
     scs foreach (l => scores(l.head) = l.tail.head.toInt)
-    scoreboard
+    interface.scoreboard(scores.toList.sortBy(_._2).reverse)
   }
   def saveToFile(f : File) = {
     val scs = scores.map(p => p._1 + " -score- " + p._2).mkString("\n")
     File.write(f,scs)
   }
 
-  def scoreboard = {
-    val scs = scores.toList.sortBy(_._2).reverse
-    scs.indices.map(i => i+1 + ": " + scs(i)._1 + "(" + scs(i)._2 + ")").mkString("\n")
-  }
 }
 
 object utils {
+
   case class File(toJava: java.io.File) {
     /** resolves an absolute or relative path string against this */
     def resolve(s: String): File = {

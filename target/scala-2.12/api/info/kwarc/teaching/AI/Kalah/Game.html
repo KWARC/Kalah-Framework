@@ -204,9 +204,21 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="trait" href="Interface.html" title="Created by jazzpirate on 11.12.16."></a>
+                        <a href="Interface.html" title="Created by jazzpirate on 11.12.16.">
+                          Interface
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="class" href="RandomPlayer.html" title=""></a>
                         <a href="RandomPlayer.html" title="">
                           RandomPlayer
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="object" href="Terminal$.html" title=""></a>
+                        <a href="Terminal$.html" title="">
+                          Terminal
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
@@ -318,9 +330,9 @@ calls init on the provided <a href="Agent.html" class="extype" name="info.kwarc.
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="info.kwarc.teaching.AI.Kalah.Game#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(p1:info.kwarc.teaching.AI.Kalah.Agent,p2:info.kwarc.teaching.AI.Kalah.Agent)(houses:Int,initSeeds:Int):info.kwarc.teaching.AI.Kalah.Game"></a><a id="&lt;init&gt;:Game"></a>
+      <a id="&lt;init&gt;(p1:info.kwarc.teaching.AI.Kalah.Agent,p2:info.kwarc.teaching.AI.Kalah.Agent,interface:info.kwarc.teaching.AI.Kalah.Interface)(houses:Int,initSeeds:Int):info.kwarc.teaching.AI.Kalah.Game"></a><a id="&lt;init&gt;:Game"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Game.html#&lt;init&gt;(p1:info.kwarc.teaching.AI.Kalah.Agent,p2:info.kwarc.teaching.AI.Kalah.Agent)(houses:Int,initSeeds:Int):info.kwarc.teaching.AI.Kalah.Game" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Game.html#&lt;init&gt;(p1:info.kwarc.teaching.AI.Kalah.Agent,p2:info.kwarc.teaching.AI.Kalah.Agent,interface:info.kwarc.teaching.AI.Kalah.Interface)(houses:Int,initSeeds:Int):info.kwarc.teaching.AI.Kalah.Game" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -329,7 +341,7 @@ calls init on the provided <a href="Agent.html" class="extype" name="info.kwarc.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Game</span><span class="params">(<span name="p1">p1: <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></span>, <span name="p2">p2: <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></span>)</span><span class="params">(<span name="houses">houses: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">6</span></span>, <span name="initSeeds">initSeeds: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">6</span></span>)</span>
+        <span class="name">Game</span><span class="params">(<span name="p1">p1: <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></span>, <span name="p2">p2: <a href="Agent.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Agent">Agent</a></span>, <span name="interface">interface: <a href="Interface.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Interface">Interface</a></span>)</span><span class="params">(<span name="houses">houses: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">6</span></span>, <span name="initSeeds">initSeeds: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">6</span></span>)</span>
       </span>
       
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">p1</dt><dd class="cmt"><p>: Agent1</p></dd><dt class="param">p2</dt><dd class="cmt"><p>: Agent2</p></dd><dt class="param">houses</dt><dd class="cmt"><p>: The number of houses per player (see <a href="Board.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Board">Board</a>)</p></dd><dt class="param">initSeeds</dt><dd class="cmt"><p>: The number of initial seeds per house (see <a href="Board.html" class="extype" name="info.kwarc.teaching.AI.Kalah.Board">Board</a>)</p></dd></dl></div>
@@ -619,9 +631,9 @@ calls init on the provided <a href="Agent.html" class="extype" name="info.kwarc.
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="info.kwarc.teaching.AI.Kalah.Game#play" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="play(showboard:Boolean):(Int,Int)"></a><a id="play(Boolean):(Int,Int)"></a>
+      <a id="play:(Int,Int)"></a>
       <span class="permalink">
-      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Game.html#play(showboard:Boolean):(Int,Int)" title="Permalink">
+      <a href="../../../../../info/kwarc/teaching/AI/Kalah/Game.html#play:(Int,Int)" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -630,7 +642,7 @@ calls init on the provided <a href="Agent.html" class="extype" name="info.kwarc.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">play</span><span class="params">(<span name="showboard">showboard: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>
+        <span class="name">play</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>
       </span>
       
       <p class="shortcomment cmt">Starts one game between (new instances of) Pl1 and Pl2.</p><div class="fullcomment"><div class="comment cmt"><p>Starts one game between (new instances of) Pl1 and Pl2.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A pair of integers representing the scores of players 1 and 2</p></dd></dl></div>
