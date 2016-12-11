@@ -154,16 +154,18 @@ class Game(p1 : Agent, p2 : Agent)(houses : Int = 6, initSeeds : Int = 6) {
   sealed abstract class Player {
     val pl : Agent
     def move : Int = pl.move
-    def init = AgentAction.init(pl,GameBoard,true,10000)//pl.init(GameBoard,true)
+    def init : Unit
     def other : Player
   }
   private case object Player1 extends Player {
     val pl = p1
     def other = Player2
+    def init = AgentAction.init(pl,GameBoard,true,10000)//pl.init(GameBoard,true)
   }
   private case object Player2 extends Player {
     val pl = p2
     def other = Player1
+    def init = AgentAction.init(pl,GameBoard,false,10000)//pl.init(GameBoard,true)
   }
 
   private case class HouseIndex(pl : Player, hn : Int) {

@@ -1,6 +1,6 @@
 package info.kwarc.teaching.AI.Kalah
 
-// import info.kwarc.teaching.AI.Kalah.WS1617.agents.Jazzpirate
+// import info.kwarc.teaching.AI.Kalah.WS1617.agents._
 import info.kwarc.teaching.AI.Kalah.utils._
 
 object Test {
@@ -22,10 +22,10 @@ object Test {
         case _ => throw new Exception("No player with name " + s + " found!")
       }
     }
-    // println(tn.readFromFile(file))
+    println(tn.readFromFile(file))
     tn.run(12,12)
     // new Game(new Jazzpirate,new RandomPlayer("Dennis"))(12,12).play()
     println(tn.scoreboard)
-    // tn.saveToFile(file)
+    tn.saveToFile(file)
   }
 }
