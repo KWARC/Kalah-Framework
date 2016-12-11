@@ -5,6 +5,7 @@ import java.io._
 import scala.collection.mutable
 import collection.JavaConverters._
 
+
 /**
   * Abstract class representing a game board. [[Game]] uses its own private extension of this class, as to prevent
   * cheating. Accessible values are:
@@ -251,7 +252,13 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
         interface.endOfRound
         // Thread.sleep(200)
       }
-      val (sc1,sc2) = if (finished == Some(Player1)) (Store1.sum, Store2.get) else (Store1.get, Store2.sum)
+      val (sc1,sc2) = if (finished == Some(Player1)) {
+        val (r1,r2) = (Store1.sum, Store2.get)
+        if (r1 == r2) (r1 +1,r2) else (r1,r2)
+      } else {
+        val (r1,r2) = (Store1.get, Store2.sum)
+        if (r1 == r2) (r1,r2 + 1) else (r1,r2)
+      }
       interface.gameResult(sc1,sc2)
       (sc1,sc2)
     } catch {
