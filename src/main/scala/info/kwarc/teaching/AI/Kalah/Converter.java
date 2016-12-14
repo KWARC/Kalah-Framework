@@ -15,7 +15,7 @@ public class Converter
      * Returns a Java-ArrayList containing your houses and their current seed number
      * @return The list of numbers of seeds in the houses of you
      */
-    static ArrayList<Integer> getMyHouses(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
+    public static ArrayList<Integer> getMyHouses(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
     {
         Iterable<Object> houses;
         if(playerOne==true)
@@ -37,7 +37,7 @@ public class Converter
      * Returns a Java-ArrayList containing enemy houses and their current seed number
      * @return The list of numbers of seeds in the houses of enemy
      */
-    static ArrayList<Integer> getEnemyHouses(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
+    public static ArrayList<Integer> getEnemyHouses(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
     {
         Iterable<Object> houses;
         if(playerOne==true)
@@ -59,7 +59,7 @@ public class Converter
      * Returns a Java-Integer representing the seeds in your store
      * @return The list of numbers of seeds in the your store
      */
-    static Integer getMyStoreSeeds(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
+    public static Integer getMyStoreSeeds(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
     {
         if(playerOne==true)
         {
@@ -72,7 +72,7 @@ public class Converter
      * Returns a Java-Integer representing the seeds in enemy store
      * @return The list of numbers of seeds in the enemy store
      */
-    static Integer getEnemyStoreSeeds(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
+    public static Integer getEnemyStoreSeeds(Tuple4<Iterable<Object>, Iterable<Object>, Object, Object> obj, boolean playerOne)
     {
         if(playerOne==true)
         {
@@ -85,7 +85,7 @@ public class Converter
      * Returns a Java-ArrayList containing your houses and their current seed number
      * @return The list of numbers of seeds in the houses of you
      */
-    static ArrayList<Integer> getMyHouses(Board board, boolean playerOne)
+    public static ArrayList<Integer> getMyHouses(Board board, boolean playerOne)
     {
         return getMyHouses(board.getState(),playerOne);
     }
@@ -94,7 +94,7 @@ public class Converter
      * Returns a Java-ArrayList containing enemy houses and their current seed number
      * @return The list of numbers of seeds in the houses of enemy
      */
-    static ArrayList<Integer> getEnemyHouses(Board board, boolean playerOne)
+    public static ArrayList<Integer> getEnemyHouses(Board board, boolean playerOne)
     {
         return getEnemyHouses(board.getState(),playerOne);
     }
@@ -103,7 +103,7 @@ public class Converter
      * Returns a Java-Integer representing the seeds in your store
      * @return The list of numbers of seeds in the your store
      */
-    static Integer getMyStoreSeeds(Board board, boolean playerOne)
+    public static Integer getMyStoreSeeds(Board board, boolean playerOne)
     {
         return getMyStoreSeeds(board.getState(),playerOne);
     }
@@ -112,8 +112,17 @@ public class Converter
      * Returns a Java-Integer representing the seeds in enemy store
      * @return The list of numbers of seeds in the enemy store
      */
-    static Integer getEnemyStoreSeeds(Board board, boolean playerOne)
+    public static Integer getEnemyStoreSeeds(Board board, boolean playerOne)
     {
         return getEnemyStoreSeeds(board.getState(),playerOne);
     }
+
+    /**
+     * Sets timeoutMove
+     */
+    public static void setTimeoutMove(Agent agent, int move)
+    {
+        agent.timeoutMove_$eq(move);
+    }
 }
+
