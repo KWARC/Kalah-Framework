@@ -1,9 +1,10 @@
 # Kalah-WS1617
 Kalah framework for the AI course at FAU WS16/17
 
-`target/scala-2.12/kalah_2.12-1.0-javadoc.jar` and
-`target/scala-2.12/api` contain the documentation,
-`src` contains source files.
+- `target/scala-2.12/kalah_2.12-1.0-javadoc.jar` and
+- `target/scala-2.12/api` contain the documentation,
+- `src` contains source files in scala and (thanks to Marcel) java interfaces so you don't have to take care of converting scala datastructures,
+- the rest of `target/scala-2.12` are the compiled `.class`-files and a packaged `.jar`. 
 
 To implement your own agent, create a new class/object extending [[info.kwarc.teaching.AI.Kalah.Agent]]
 and implement the required methods (init and move). For details see the documentation.
@@ -18,3 +19,8 @@ Your *init* function has 10 seconds to terminate. If it doesn't terminate in 10 
 
 Your *move* function has 5 seconds to return a valid move. If it doesn't return a valid move in
 5 seconds, the first house with non-zero seeds will be chosen as a move.
+
+**Requirements:**
+- Java 8
+- The .scala files should be compatible with scala 2.10. If there are any problems with the scala version, let me know as soon as possible via the forum.
+- If there are any other problems with using my framework (like java interfacing) please let me/us know via the forum as soon as possible.

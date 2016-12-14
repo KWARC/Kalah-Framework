@@ -1,49 +1,34 @@
 package info.kwarc.teaching.AI.Kalah
 
-import scala.collection.mutable
+import info.kwarc.teaching.AI.Kalah.utils._
+// import WS1617.agents._
 
-/**
-  * Created by jazzpirate on 08.11.16.
-  */
 object Test {
   def main(args: Array[String]): Unit = {
-    /*
-    val game = new Game(new RandomPlayer,new RandomPlayer)(6,6)
-    val (sc1,sc2) = game.play()
-    println("Score Player 1: " + sc1)
-    */
-    val tn = new Tournament
-    val ret = tn.run(6,6)
-    ret.indices.foreach(i => println(i + ": " + ret(i)._1 + "(" + ret(i)._2 + ")"))
+    val file = File("/home/jazzpirate/work/scores.txt")
+
+    val int = new Fancy.FancyInterface
+    val tn = new Tournament {
+      val players: List[String] = List("R1", "R2", "R3"/*, "Jazzpirate"*/)
+      val interface = int
+
+      def getPlayer(s: String): Agent = s match {
+        case "R1" => new RandomPlayer("R1")
+        case "R2" => new RandomPlayer("R2")
+        case "R3" => new RandomPlayer("R3")
+          /*
+        case "Jazzpirate" =>
+          int.slow = true
+          new Jazzpirate
+          */
+        case _ => throw new Exception("No player with name " + s + " found!")
+      }
+    }
+    int.slow = false
+    //tn.readFromFile(file)
+    tn.run(6,6)
+    // new Game(new Jazzpirate,new RandomPlayer("Dennis"),Terminal)(12,12).play
+    //tn.saveToFile(file)
   }
 }
 
-class Tournament {
-
-  def players : List[Agent] = List(
-    new HumanPlayer("Yo"),
-    new RandomPlayer("R2"),
-    new RandomPlayer("R3"),
-    new TimeOut
-  )
-
-  val scores = mutable.HashMap(players.map(p => (p.name,0)):_*)
-
-  def run(houses: Int, seeds : Int) = {
-    players foreach (p => {
-      players foreach (q => if (p.name!=q.name) {
-        println(p.name + " vs. " + q.name)
-        val result = (new Game(p,q)(houses,seeds)).play(false)
-        if (result._1 > result._2) {
-          println(p.name + " wins!")
-          scores(p.name)+= houses
-        }
-        else if (result._2 > result._1) {
-          println(q.name + " wins!")
-          scores(q.name) += houses
-        }
-      })
-    })
-    scores.toList.sortBy(_._2).reverse
-  }
-}

@@ -23,10 +23,11 @@ abstract class Agent {
 
   /**
     * This method is called by [[Game]] to request an action. Note that you have <b>at most</b> 5sec to
-    * return an action; otherwise the thread is aborted and a random non-empty house chosen.
-    * @return An integer between 1 and n representing the house to play.
+    * return an action; otherwise the thread is aborted and the timeoutMove variable (by default=1) is chosen.
+    * So you can use the full 5 seconds to constantly revise that variable.
     */
   def move : Int
+  @volatile var timeoutMove : Int = 1
 }
 
 /**
@@ -70,7 +71,9 @@ class RandomPlayer(val name : String) extends Agent {
     if (i == 0) {
       Thread.sleep(10000)
       0
-    } else */ i + 1
+    } else */
+    timeoutMove = i + 1
+    i + 1
   }
 }
 
@@ -82,9 +85,11 @@ class TimeOut extends Agent/*("Timeouter",List("Dennis"))*/ {
   def init(board : Board, playerOne : Boolean): Unit = {
     currentboard = board
     Thread.sleep(11000)
+    println("Woke up!")
   }
   def move : Int = {
-    Thread.sleep(10000)
+    Thread.sleep(8000)
+    println("Woke up!")
     0
   }
 }
