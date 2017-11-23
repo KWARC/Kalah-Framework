@@ -48,6 +48,8 @@ abstract class Board(val houses : Int, val initSeeds : Int) {
   def getScore(player : Int) : Int
 
   def asString(pl : Agent) : String
+
+  def getMoves : java.lang.Iterable[(Boolean,Int)]
 }
 
 /**
@@ -61,6 +63,7 @@ abstract class Board(val houses : Int, val initSeeds : Int) {
 class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initSeeds : Int = 6) {
 
   private object GameBoard extends Board(houses,initSeeds) {
+    var moves : List[(Player,Int)] = Nil
     val p1Houses = mutable.HashMap.empty[Int,Int]
     val p2Houses = mutable.HashMap.empty[Int,Int]
     (1 to houses) foreach (i => {
@@ -70,11 +73,27 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
     var p1Store = 0
     var p2Store = 0
 
+    def getMoves = moves.map({
+      case (Player1,i) => (true,i)
+      case (Player2,i) => (false,i)
+    }).asJava
+
+    /*
+    private def getlastmovesrecurse(list: List[(Player,Int)], pl : Player) : List[Int] =
+      if (list.isEmpty) Nil
+      else if (list.head._1 == pl) list.head._2 :: getlastmovesrecurse(list.tail,pl)
+      else List(list.head._2)
+    override def getLastMoves(player: Int): List[Int] = player match {
+      case 1 => getlastmovesrecurse(moves,Player1).reverse
+      case 2 => getlastmovesrecurse(moves,Player2).reverse
+      case _ => throw new Exception("Not a player: " + player)
+    }
+    */
+
     private def valuelist(pl : Player) = pl match {
       case Player1 => (1 to houses).map(p1Houses.apply).toList
       case Player2 => (1 to houses).map(p2Houses.apply).toList
     }
-
 
     def getHouses(implicit ag : Agent) : java.lang.Iterable[Int] = ag match {
       case Player1.pl => valuelist(Player1).asJava
@@ -179,11 +198,17 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
       else HouseIndex(actor,1)
   }
   private val Store1 = new HouseIndex(Player1,0) {
-    def sum = GameBoard.p1Store + (1 to houses).map(i => HouseIndex(Player1,i).get).sum
+    def sum = {
+      GameBoard.p1Store = GameBoard.p1Store + (1 to houses).map(i => HouseIndex(Player1,i).pull).sum
+      GameBoard.p1Store
+    }
     def add(i : Int) = GameBoard.p1Store = GameBoard.p1Store + i
   }
   private val Store2 = new HouseIndex(Player2,0) {
-    def sum = GameBoard.p2Store + (1 to houses).map(i => HouseIndex(Player2,i).get).sum
+    def sum = {
+      GameBoard.p2Store = GameBoard.p2Store + (1 to houses).map(i => HouseIndex(Player2,i).pull).sum
+      GameBoard.p2Store
+    }
     def add(i : Int) = GameBoard.p2Store = GameBoard.p2Store + i
   }
   private def store(pl : Player) = pl match {
@@ -193,16 +218,19 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
 
   private def playerMove(pl : Player) : Unit = {
     interface.playerMove(pl == Player1)
-    val move = pl.pl match {
-      case hp : HumanPlayer => pl.move
-      case _ => try {
+    val move = try {
         AgentAction.move(pl.pl,5000)
       } catch {
-        case e : java.util.concurrent.TimeoutException =>
+      case _: Throwable =>
+        Thread.sleep(50)
+        try {
           pl.pl.timeoutMove
-      }
+        } catch {
+          case _: Throwable => throw Illegal(pl, -20)
+        }
     }
-    if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl)
+    if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl,move)
+    GameBoard.moves ::= (pl,move)
     interface.chosenMove(move,pl == Player1)
     var index = HouseIndex(pl,move)
     val counter = index.pull
@@ -210,18 +238,30 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
       index = index.next(pl)
       index.++
     })
-    if (index.pl == pl && index.get == 1 && index.hn != 0 && HouseIndex(pl.other,houses + 1 - index.hn).get != 0) {
+    if (index.pl == pl && index.get == 1 && index.hn != 0 && HouseIndex(pl.other,houses + 1 - index.hn).get > 0) {
       store(pl).add(index.pull + HouseIndex(pl.other,houses + 1 - index.hn).pull)
     }
-    if (index.pl == pl && index.hn == 0 && (1 to houses).exists(i => HouseIndex(pl,i).get > 0))
+    if (!(GameBoard.p1Store + GameBoard.p2Store + GameBoard.p1Houses.values.sum + GameBoard.p2Houses.values.sum
+      == 2 * GameBoard.houses * GameBoard.initSeeds)) throw new Illegal(pl,-10)
+    checkEarly
+    if (finish.isEmpty && finished(pl)) finish = Some(pl)
+    if (finish.isEmpty && index.pl == pl && index.hn == 0)
       playerMove(pl)
   }
 
-  case class Illegal(pl : Player) extends Throwable
+  case class Illegal(pl : Player, value : Int) extends Throwable
 
-  private def finished : Option[Player] = if ((1 to houses).forall(i => HouseIndex(Player1,i).get == 0))
+  private def finished(pl : Player) = (1 to houses).forall(i => HouseIndex(pl,i).get == 0) /*
     Some(Player2) else if ((1 to houses).forall(i => HouseIndex(Player2,i).get == 0)) Some(Player1)
-  else None
+  else None */
+  var finish : Option[Player] = None
+  private def checkEarly = if (Store1.get > GameBoard.houses * GameBoard.initSeeds) {
+    println(Player1.pl.name + " wins early")
+    finish = Some(Player1)
+  } else if (Store2.get > GameBoard.houses * GameBoard.initSeeds) {
+    println(Player2.pl.name + " wins early")
+    finish = Some(Player2)
+  }
   /**
     * Starts one game between (new instances of) Pl1 and Pl2.
     * @return A pair of integers representing the scores of players 1 and 2
@@ -244,35 +284,47 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
         return (1,0)
     }
     try {
-      while (finished.isEmpty) {
+      while ({
+        if (finish.isEmpty && finished(Player1)) finish = Some(Player1)
+        finish.isEmpty
+      }) {
         playerMove(Player1)
         // Thread.sleep(200)
-        if (finished.isEmpty) playerMove(Player2)
+        if (finish.isEmpty && finished(Player2)) finish = Some(Player2)
+          else if (finish.isEmpty) playerMove(Player2)
         // Thread.sleep(200)
+
         interface.endOfRound
         // Thread.sleep(200)
       }
-      val (sc1,sc2) = if (finished == Some(Player1)) {
-        val (r1,r2) = (Store1.sum, Store2.get)
-        if (r1 == r2) (r1 +1,r2) else (r1,r2)
+      val (sc1,sc2) = if (finish == Some(Player2)) {
+        (Store1.sum, Store2.get)
       } else {
-        val (r1,r2) = (Store1.get, Store2.sum)
-        if (r1 == r2) (r1,r2 + 1) else (r1,r2)
+        (Store1.get, Store2.sum)
       }
       interface.gameResult(sc1,sc2)
       (sc1,sc2)
     } catch {
-      case Illegal(Player1) =>
-        interface.illegal(true)
+      case Illegal(Player1,_) if finished(Player2) =>
+        val (sc1,sc2) = (Store1.sum,Store2.get)
+        interface.gameResult(sc1,sc2)
+        (sc1,sc2)
+      case Illegal(Player2,_) if finished(Player1) =>
+        val (sc1,sc2) = (Store1.get,Store2.sum)
+        interface.gameResult(sc1,sc2)
+        (sc1,sc2)
+      case Illegal(Player1,i) =>
+        interface.illegal(true,i,GameBoard)
         (0,Store2.get + 1)
-      case Illegal(Player2) =>
-        interface.illegal(false)
+      case Illegal(Player2,i) =>
+        interface.illegal(false,i,GameBoard)
         (Store1.get + 1, 0)
     }
   }
 }
 
 abstract class Tournament {
+  var loglist : List[String] = Nil
   val interface : Interface
   val players : List[String] // = List("R1","R2","R3","Jazzpirate")
   def getPlayer(s : String) : Agent /* = s match {
@@ -288,11 +340,42 @@ abstract class Tournament {
   def run(houses: Int, seeds : Int, showboard : Boolean = false) = {
     players foreach (p => {
       players foreach (q => if (p!=q) {
-        val result = (new Game(getPlayer(p),getPlayer(q),interface)(houses,seeds)).play
+        val result = if (loglist.isEmpty) (new Game(getPlayer(p),getPlayer(q),interface)(houses,seeds)).play else {
+     //     try {
+            val p1 = getPlayer(p).name
+            val p2 = getPlayer(q).name
+            assert(loglist.head == p1 + " vs. " + p2)
+            if (loglist(1).startsWith(p1)) {
+              loglist = loglist.tail.tail
+              (0,1)
+            }
+            else if (loglist(1).startsWith(p2)) {
+              loglist = loglist.tail.tail
+              (1,0)
+            }
+            else {
+              assert(loglist(1).startsWith("Final score: "))
+              val res = loglist(1).split('-').tail.head.drop(1)
+              // println(res + "    " + p1 + " " + p2)
+              assert(res.startsWith(p1) || res.startsWith(p2) || res.startsWith("it's a draw!"))
+              loglist = loglist.tail.tail
+              if (res.startsWith(p1)) (1, 0)
+              else if (res.startsWith(p2)) (0, 1) else (1,1)
+            }
+    /*      } catch {
+            case t : Throwable =>
+              println("Continue...")
+              loglist = Nil
+              (new Game(getPlayer(p),getPlayer(q),interface)(houses,seeds)).play
+          } */
+        }
         if (result._1 > result._2) {
-          scores(p)+= houses
+          scores(p)+= 2 * houses
         }
         else if (result._2 > result._1) {
+          scores(q) += 2 * houses
+        } else {
+          scores(p) += houses
           scores(q) += houses
         }
       })
@@ -304,10 +387,9 @@ abstract class Tournament {
   import utils._
 
   def readFromFile(f : File) = {
-    scores.clear()
+    // scores.clear()
     val scs = File.read(f).split("\n").filterNot(_.isEmpty).map(_.split(" -score- "))
     scs foreach (l => scores(l.head) = l.tail.head.toInt)
-    interface.scoreboard(scores.toList.sortBy(_._2).reverse)
   }
   def saveToFile(f : File) = {
     val scs = scores.map(p => p._1 + " -score- " + p._2).mkString("\n")

@@ -98,3 +98,49 @@ class AgentThread implements Runnable
         }
     }
 }
+/*
+class SecureClassLoader extends ClassLoader {
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
+        if (/* name is white-listed JDK class// true ) return super.loadClass(name);
+        return findClass(name);
+    }
+    @Override
+    public Class findClass(String name) {
+        byte[] b = loadClassData(name);
+        return defineClass(name, b, 0, b.length);
+    }
+    private byte[] loadClassData(String name) {
+        // load the untrusted class data here
+    }
+}
+
+class MySecurityManager extends SecurityManager {
+    private Object secret;
+    public MySecurityManager(Object pass) { secret = pass; }
+    private void disable(Object pass) {
+        if (pass == secret) secret = null;
+    }
+    // ... override checkXXX method(s) here.
+    // Always allow them to succeed when secret==null
+}
+
+class MyIsolatedThread extends Thread {
+    private AgentThread t;
+    private Object pass = new Object();
+    private SecureClassLoader loader = new SecureClassLoader();
+    private MySecurityManager sm = new MySecurityManager(pass);
+    public void run() {
+        SecurityManager old = System.getSecurityManager();
+        System.setSecurityManager(sm);
+        runUntrustedCode();
+        sm.disable(pass);
+        System.setSecurityManager(old);
+    }
+    private void runUntrustedCode() {
+        try {
+            t.run();
+        } catch (Throwable t) {}
+    }
+}
+*/

@@ -4,7 +4,11 @@ import java.awt.{BasicStroke, BorderLayout, Color, Dimension, Font, Graphics, Gr
 import java.awt.event.{ActionEvent, ActionListener, WindowAdapter, WindowEvent}
 import java.awt.geom.Rectangle2D
 import javax.swing.{JFrame, JPanel, SwingUtilities, Timer}
+
+import info.kwarc.teaching.AI.Kalah.utils.File
+
 import collection.JavaConverters._
+import scala.math._
 
 /**
   * Created by jazzpirate on 11.12.16.
@@ -32,17 +36,70 @@ trait Interface {
   def playerMove(playerOne : Boolean = true)
   def chosenMove(house : Int, playerOne : Boolean = true)
   protected def endRound
-  def illegal(playerOne : Boolean = true)
+  def illegal(playerOne : Boolean = true,move : Int, board : Board)
   def scoreboard(ls : List[(String,Int)])
+
+  private val THIS_TOP = this
+  def + (that : Interface) = CombineInterfaces(THIS_TOP,that)
+}
+
+case class CombineInterfaces(a : Interface,b : Interface) extends Interface {
+  protected def startgame: Unit = ???
+  override def newGame(p1 : String, p2 : String, board : Board) = {
+    pl1 = p1
+    pl2 = p2
+    GameBoard = board
+    round = 0
+    a.newGame(p1,p2,board)
+    b.newGame(p1,p2,board)
+  }
+  override def endOfRound : Unit = {
+    round += 1
+    a.endOfRound
+    b.endOfRound
+  }
+
+  def gameResult(sc1: Int, sc2: Int) = {
+    a.gameResult(sc1, sc2)
+    b.gameResult(sc1, sc2)
+  }
+
+  def timeout(playerOne: Boolean = true): Unit = {
+    a.timeout(playerOne)
+    b.timeout(playerOne)
+  }
+
+  def playerMove(playerOne: Boolean = true) = {
+    a.playerMove(playerOne)
+    b.playerMove(playerOne)
+  }
+
+  def chosenMove(house: Int, playerOne: Boolean = true) = {
+    a.chosenMove(house, playerOne)
+    b.chosenMove(house, playerOne)
+  }
+
+  protected def endRound = ???
+
+  def illegal(playerOne: Boolean = true, move: Int, board: Board): Unit = {
+    a.illegal(playerOne, move, board)
+    b.illegal(playerOne, move, board)
+  }
+
+  def scoreboard(ls: List[(String, Int)]): Unit = {
+    a.scoreboard(ls)
+    b.scoreboard(ls)
+  }
 }
 
 object Terminal extends Interface {
-  protected def startgame = println(pl1 + " vs. " + pl2)
+  def startgame = println(pl1 + " vs. " + pl2)
   def gameResult(sc1 : Int, sc2 : Int) = {
     print("\rFinished in round " + round + ". Final score: " + sc1 + " : " + sc2 + "\n")
     if (sc1 > sc2)
       println(pl1 + " wins!")
-    else println(pl2 + " wins!")
+    else if (sc2 > sc1) println(pl2 + " wins!")
+    else println("It's a draw!")
   }
   def timeout(playerOne : Boolean = true) =
     println(pl1 + " timed out during initialization!")
@@ -53,52 +110,99 @@ object Terminal extends Interface {
 
   def endRound: Unit = print("\rRound " + round + " Score: " + GameBoard.getScore(1) + " : " + GameBoard.getScore(2))
 
-  def illegal(playerOne : Boolean = true) = {
+  def illegal(playerOne : Boolean = true, move : Int, board : Board) = {
     println({
       if (playerOne) pl1 else pl2
-    } + " made illegal move")
+    } + " made illegal move: " + move)
     println({
       if (playerOne) pl2 else pl1
     } + " wins!")
+    println(board.toString)
   }
 
   override def scoreboard(scs: List[(String, Int)]): Unit =
     println(scs.indices.map(i => i+1 + ": " + scs(i)._1 + "(" + scs(i)._2 + ")").mkString("\n"))
 }
 
+case class Logger(f : File) extends Interface {
+  protected def startgame: Unit = write(pl1 + " vs. " + pl2)
+  override def endOfRound : Unit = {
+  }
+  def write(s : String) = {
+    val bef = File.read(f)
+    File.write(f,bef + s + "\n")
+  }
+
+  def gameResult(sc1: Int, sc2: Int) = {
+    write ("Final score: " + sc1 + ":" + sc2 + " - " +
+    {
+      if(sc1 > sc2) pl1 + " wins!"
+      else if (sc2 > sc1) pl2 + " wins!"
+      else "it's a draw!"
+    })
+  }
+
+  def timeout(playerOne: Boolean = true): Unit = {
+    write({if (playerOne) pl1 else pl2} + " timed out!")
+  }
+
+  def playerMove(playerOne: Boolean = true) = {
+
+  }
+
+  def chosenMove(house: Int, playerOne: Boolean = true) = {
+  }
+
+  protected def endRound = {}
+
+  def illegal(playerOne: Boolean = true, move: Int, board: Board): Unit = {
+    write({if (playerOne) pl1 else pl2} + " made illegal move: " + move)
+  }
+
+  def scoreboard(ls: List[(String, Int)]): Unit = {
+
+  }
+}
+
 object Fancy {
-  class FancyInterface extends Interface {
+  class FancyInterface(var size : Int = 36) extends Interface {
     var slow = true
-    val frame = new FancyFrame
+    val frame = new FancyFrame(i => (i * size) / 36)
     frame.getContentPane.setLayout(new BorderLayout)
     frame.setVisible(true)
 
-    def th(run : => Unit) = run //SwingUtilities.invokeLater(() => run)
+    def th(run : => Unit) = run // SwingUtilities.invokeLater(() => run)
 
     private def waitforEnd = {
       Thread.sleep(100)
       while(!frame.panel.timer.isDone) {
         Thread.sleep(100)
       }
-      Thread.sleep(5000)
+      if (!slow) Thread.sleep(5000)
     }
 
     def startgame = {
       frame.init(GameBoard,pl1,pl2)
+      Thread.sleep(100)
+      println(pl1 + " vs. " + pl2)
     }
     def gameResult(sc1 : Int, sc2 : Int) = {
       val panel = frame.panel
       import panel._
+      val st = GameBoard.getState
       th {
         frame.schedule(() => {
-          update(GameBoard.getState)
+          update(st)
           if (sc1 > sc2) status.text = pl1 + " wins! " + sc1 + ":" + sc2
-          else status.text = pl2 + " wins! " + sc1 + ":" + sc2
+          else if (sc2 > sc1) status.text = pl2 + " wins! " + sc1 + ":" + sc2
+          else status.text = "It's a draw!"
+          println(status.text)
         })
       }
       waitforEnd
     }
     def timeout(playerOne : Boolean = true) = {
+      println("Timeout Player " + {if (playerOne) pl1 else pl2})
       val panel = frame.panel
       import panel._
       th {
@@ -112,8 +216,10 @@ object Fancy {
     }
     def playerMove(playerOne : Boolean = true) = th {
       val panel = frame.panel
+      val state = GameBoard.getState
       import panel._
       frame.schedule(() => {
+        update(state)
         if (playerOne) status.text = pl1 + "..."
         else status.text = pl2   + "..."
       })
@@ -162,14 +268,35 @@ object Fancy {
             house.color = Color.ORANGE
             pred.color = if (pred == start) Color.green else Color.BLACK
           })
-          timer.sleep(200)
+          timer.sleep(50)
 
           i += 1
           counter -= 1
           if (counter == 0) {
-            timer.sleep(200)
+            val other = {
+              var i = pl1houses.indexOf(house)
+              val inpl1 = i != -1
+              if (!inpl1) i = pl2houses.indexOf(house)
+              if (i == -1) None
+              else if (playerOne && inpl1) Some(pl2houses(GameBoard.houses - i - 1))
+              else if (!playerOne && !inpl1) Some(pl1houses(GameBoard.houses - i - 1))
+              else None
+            }
+            if (other.isDefined) {
+              frame.schedule(() => {
+                if (other.get.value > 0 && house.value == 1) {
+                  house.color = Color.RED
+                  other.get.color = Color.RED
+                  status.text += "; captures " + {
+                    house.value + other.get.value
+                  }
+                }
+              })
+            }
+            timer.sleep(1000)
             frame.schedule(() => {
               house.color = Color.BLACK
+              other.foreach(c => c.color = Color.BLACK)
               start.color = Color.BLACK
             })
           }
@@ -182,28 +309,35 @@ object Fancy {
         })
       }
     }
-    def endRound = th {
+    def endRound = {
       val panel = frame.panel
       val sc = GameBoard.getState
       val r = round + 1
       import panel._
-      frame.schedule(() => {
-        top.text = pl1 + " vs. " + pl2 + " Round " + r
-        update(sc)
-      })
+      th {
+        frame.schedule(() => {
+          top.text = pl1 + " vs. " + pl2 + " Round " + r
+          update(sc)
+        })
+      }
+      while (timer.isOverloaded) {
+        Thread.sleep(100)
+      }
     }
-    def illegal(playerOne : Boolean = true) = {
+    def illegal(playerOne : Boolean = true, m : Int, board : Board) = {
+      println("Illegal move by " + {if (playerOne) pl1 else pl2} + ": " + m)
       val panel = frame.panel
       import panel._
       th {
         frame.schedule(() => {
-          if (playerOne) status.text = pl1 + " made illegal move! " + pl2 + " wins!"
-          if (playerOne) status.text = pl2 + " made illegal move! " + pl1 + " wins!"
+          if (playerOne) status.text = pl1 + " made illegal move: " + m + " - " + pl2 + " wins!"
+          else status.text = pl2 + " made illegal move: " + m + " - " + pl1 + " wins!"
         })
       }
       waitforEnd
     }
-    def scoreboard(ls: List[(String, Int)]): Unit = ??
+    def scoreboard(ls: List[(String, Int)]): Unit =
+      println(ls.indices.map(i => i+1 + ": " + ls(i)._1 + "(" + ls(i)._2 + ")").mkString("\n"))
 
     private def ?? = { frame.repaint() }
   }
@@ -213,28 +347,60 @@ object Fancy {
     def draw(g : Graphics2D)
   }
 
-  class Text(pos_x : Int,pos_y : Int, init : String) extends myComponent {
+  class Text(pos_x : Int,pos_y : Int, init : String,scale : Int => Int) extends myComponent {
     var text = init
     def draw(g : Graphics2D): Unit = {
       g.setColor(color)
-      g.drawString(text,pos_x,pos_y)
+      g.drawString(text,scale(pos_x),scale(pos_y))
     }
 
   }
 
-  class Field(pos_x : Int,pos_y : Int) extends myComponent {
+  class Field(pos_x : Int,pos_y : Int, scale : Int => Int) extends myComponent {
     var value = 100
 
     def draw(g : Graphics2D): Unit = {
       g.setColor(color)
-      g.drawString(value.toString,pos_x+20,pos_y+55)
-      g.draw(new Rectangle2D.Double(pos_x,pos_y,100,100))
+      g.drawString(value.toString,scale(pos_x+20),scale(pos_y+55))
+      g.draw(new Rectangle2D.Double(scale(pos_x),scale(pos_y),scale(100),scale(100)))
     }
   }
 
-  class MyPanel(board :Board,pl1 : String, pl2 : String) extends JPanel {
+  case class Scoreboard(ls: List[(String, Int)]) extends JPanel {
+
+    val total = ls.length
+
+    lazy val WIDTH = 1024
+    lazy val HEIGHT = 768
+
+    val center = (WIDTH/2,HEIGHT/2)
+    val length = (WIDTH * 19) / 20
+
+    def getPos(i : Int) = {
+      val angle = (3.0 * Pi / 2.0) - (i.toDouble * 2.0 * Pi / total)
+      ((length.toDouble * cos(angle)).toInt,(length.toDouble * sin(angle)).toInt)
+    }
+
+    case class Node(x : Int, y : Int, pos : Int, plstr : String) {
+      def draw(g : Graphics2D) = ???
+    }
+
+    val components : List[Node] = ???
+
+    override def paintComponent(g: Graphics): Unit = {
+      super.paintComponent(g)
+
+      g.asInstanceOf[Graphics2D].setStroke(new BasicStroke(3))
+      g.setFont(new Font("Serif",Font.PLAIN,12))
+      components foreach (_.draw(g.asInstanceOf[Graphics2D]))
+    }
+
+    setPreferredSize(new Dimension(1024,768))
+  }
+
+  class MyPanel(board :Board,pl1 : String, pl2 : String,scale : Int => Int = i => i) extends JPanel {
     object timer extends ActionListener {
-      private val DELAY = 20
+      private val DELAY = 10
       private val t = new Timer(DELAY,this)
       t.start()
       private var actions : List[() => Unit] = Nil
@@ -249,6 +415,7 @@ object Fancy {
       }
       def stop = t.stop()
       def isDone = actions.isEmpty
+      def isOverloaded = actions.length > 200
     }
 
     def update(res : (java.lang.Iterable[Int],java.lang.Iterable[Int],Int,Int)) = {
@@ -261,49 +428,49 @@ object Fancy {
       pl2score.value = sc2
       repaint()
     }
+    lazy val minwidth = (board.houses + 2) * 100 + 40
+    lazy val WIDTH = List(minwidth,(pl1 + " vs. " + pl2 + " Round 99").length * 25 + 40).max
+    lazy val HEIGHT = 420
 
-    val WIDTH = (board.houses + 2) * 100 + 40
-    val HEIGHT = 420
-
-    override def getPreferredSize: Dimension = new Dimension(WIDTH,HEIGHT)
-    setPreferredSize(new Dimension(WIDTH,HEIGHT))
+    //override def getPreferredSize: Dimension = new Dimension(scale(WIDTH),scale(HEIGHT))
+    setPreferredSize(new Dimension(scale(WIDTH),scale(HEIGHT)))
 
     val pl2houses = (1 to board.houses).map(i => {
-      val box = new Field(20 + (100 * i),120)
+      val box = new Field(20 + (100 * i),120,scale)
       box.value = board.initSeeds
       box
     }).reverse.toList
-    val pl2score = new Field(20,170)
+    val pl2score = new Field(20,170,scale)
     pl2score.value = 0
-    val pl1score = new Field(120 + (100 * board.houses),170)
+    val pl1score = new Field(120 + (100 * board.houses),170,scale)
     pl1score.value = 0
     val pl1houses = (1 to board.houses).map(i => {
-      val box = new Field(20 + (100 * i),220)
+      val box = new Field(20 + (100 * i),220,scale)
       box.value = board.initSeeds
       box
     }).toList
 
-    val status = new Text(20,392,"Initializing...")
+    val status = new Text(20,392,"Initializing...",scale)
     status.color = Color.RED
-    val top = new Text(20,36,pl1 + " vs. " + pl2 + " Round 1")
+    val top = new Text(20,36,pl1 + " vs. " + pl2 + " Round 1",scale)
 
     val components : List[myComponent] =
       top ::
-      new Text((WIDTH / 2) - (pl2.length * 10) ,/*76*/95,pl2) ::
+      new Text((minwidth / 2) - (pl2.length * 10) ,/*76*/95,pl2,scale) ::
       pl1score :: pl2score ::
-      new Text((WIDTH / 2) - (pl1.length * 10),356,pl1) ::
+      new Text((minwidth / 2) - (pl1.length * 10),356,pl1,scale) ::
       status :: (pl1houses ::: pl2houses)
 
     override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
 
-      g.asInstanceOf[Graphics2D].setStroke(new BasicStroke(3))
-      g.setFont(new Font("Serif",Font.PLAIN,36))
+      g.asInstanceOf[Graphics2D].setStroke(new BasicStroke(scale(3)))
+      g.setFont(new Font("Serif",Font.PLAIN,scale(36)))
       components foreach (_.draw(g.asInstanceOf[Graphics2D]))
     }
   }
 
-  class FancyFrame extends JFrame {
+  class FancyFrame(scale : Int => Int = i => i) extends JFrame {
 
     var panel: MyPanel = null
 
@@ -318,14 +485,14 @@ object Fancy {
     setLocationRelativeTo(null)
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 
-    def init(board : Board,pl1 : String,pl2 : String) = {
+    def init(board : Board,pl1 : String,pl2 : String) = SwingUtilities.invokeLater(() => {
       if (panel != null) panel.timer.stop
       getContentPane.removeAll()
-      panel = new MyPanel(board,pl1,pl2)
+      panel = new MyPanel(board,pl1,pl2,scale)
       getContentPane.add(panel,BorderLayout.CENTER)
       panel.setVisible(true)
       pack()
-    }
+    })
 
     def schedule(f : () => Unit) = panel.timer.schedule(f)
 
