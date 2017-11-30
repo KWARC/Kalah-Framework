@@ -219,7 +219,12 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
   private def playerMove(pl : Player) : Unit = {
     interface.playerMove(pl == Player1)
     val move = try {
-        AgentAction.move(pl.pl,5000)
+        pl.pl match {
+          case hp : HumanPlayer =>
+            AgentAction.move(pl.pl,1000000)
+          case _ =>
+            AgentAction.move(pl.pl,5000)
+        }
       } catch {
       case _: Throwable =>
         Thread.sleep(50)
@@ -323,80 +328,7 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
   }
 }
 
-abstract class Tournament {
-  var loglist : List[String] = Nil
-  val interface : Interface
-  val players : List[String] // = List("R1","R2","R3","Jazzpirate")
-  def getPlayer(s : String) : Agent /* = s match {
-    case "R1" => new RandomPlayer ("R1")
-    case "R2" => new RandomPlayer ("R2")
-    case "R3" => new RandomPlayer ("R3")
-    case "Jazzpirate" => new Jazzpirate
-    case _ => throw new Exception("No player with name " + s + " found!")
-  } */
 
-  lazy val scores = mutable.HashMap(players.map(p => (p,0)):_*)
-
-  def run(houses: Int, seeds : Int, showboard : Boolean = false) = {
-    players foreach (p => {
-      players foreach (q => if (p!=q) {
-        val result = if (loglist.isEmpty) (new Game(getPlayer(p),getPlayer(q),interface)(houses,seeds)).play else {
-     //     try {
-            val p1 = getPlayer(p).name
-            val p2 = getPlayer(q).name
-            assert(loglist.head == p1 + " vs. " + p2)
-            if (loglist(1).startsWith(p1)) {
-              loglist = loglist.tail.tail
-              (0,1)
-            }
-            else if (loglist(1).startsWith(p2)) {
-              loglist = loglist.tail.tail
-              (1,0)
-            }
-            else {
-              assert(loglist(1).startsWith("Final score: "))
-              val res = loglist(1).split('-').tail.head.drop(1)
-              // println(res + "    " + p1 + " " + p2)
-              assert(res.startsWith(p1) || res.startsWith(p2) || res.startsWith("it's a draw!"))
-              loglist = loglist.tail.tail
-              if (res.startsWith(p1)) (1, 0)
-              else if (res.startsWith(p2)) (0, 1) else (1,1)
-            }
-    /*      } catch {
-            case t : Throwable =>
-              println("Continue...")
-              loglist = Nil
-              (new Game(getPlayer(p),getPlayer(q),interface)(houses,seeds)).play
-          } */
-        }
-        if (result._1 > result._2) {
-          scores(p)+= 2 * houses
-        }
-        else if (result._2 > result._1) {
-          scores(q) += 2 * houses
-        } else {
-          scores(p) += houses
-          scores(q) += houses
-        }
-      })
-    })
-    val ret = scores.toList.sortBy(_._2).reverse
-    interface.scoreboard(ret)
-    ret
-  }
-  import utils._
-
-  def readFromFile(f : File) = {
-    // scores.clear()
-    val scs = File.read(f).split("\n").filterNot(_.isEmpty).map(_.split(" -score- "))
-    scs foreach (l => scores(l.head) = l.tail.head.toInt)
-  }
-  def saveToFile(f : File) = {
-    val scs = scores.map(p => p._1 + " -score- " + p._2).mkString("\n")
-    File.write(f,scs)
-  }
-
-}
 
 object utils {
 

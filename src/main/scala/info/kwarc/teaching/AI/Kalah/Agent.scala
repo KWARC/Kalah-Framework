@@ -34,7 +34,7 @@ abstract class Agent {
   * A human player that reads actions (as field numbers) from stdin. Can be used to test your agents.
   * @param name     : What you call your agent (just for fun).
   */
-class HumanPlayer(val name : String) extends Agent {
+final case class HumanPlayer(val name : String) extends Agent {
   val students = List("Dennis").asJava
   private var currentboard : Board = null
   private var playerone = None.asInstanceOf[Option[Boolean]]
@@ -49,7 +49,8 @@ class HumanPlayer(val name : String) extends Agent {
   def move : Int = {
     println("Your move, " + name)
     println(currentboard.asString(this))
-    readLine("Enter house: ").toInt
+    print("Enter house: ")
+    scala.io.StdIn.readInt
   }
 }
 
@@ -63,21 +64,16 @@ class RandomPlayer(val name : String) extends Agent {
   def move : Int = {
     val ls = currentboard.getHouses
     val rnd = new Random
-    var i = rnd.nextInt(ls.asScala.size /* + 1*/)
-    while (/* i > 0 && */ ls.asScala.toList(i /* -1 */ ) == 0) {
-      i = rnd.nextInt(ls.asScala.size /* + 1 */)
+    var i = rnd.nextInt(ls.asScala.size)
+    while (ls.asScala.toList(i) == 0) {
+      i = rnd.nextInt(ls.asScala.size)
     }
-    /*
-    if (i == 0) {
-      Thread.sleep(10000)
-      0
-    } else */
     timeoutMove = i + 1
     i + 1
   }
 }
 
-class TimeOut extends Agent/*("Timeouter",List("Dennis"))*/ {
+class TimeOut extends Agent {
   val name = "Timeouter"
   val students = List("Dennis").asJava
   private var currentboard : Board = null
