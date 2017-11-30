@@ -1,14 +1,18 @@
-package info.kwarc.teaching.AI.Kalah
+package info.kwarc.teaching.AI.Kalah.Agents
 
+import info.kwarc.teaching.AI.Kalah.{Board, Game}
+
+import scala.collection.JavaConverters._
 import scala.util.Random
-import collection.JavaConverters._
 
 /**
   * The abstract class for agents. Needs to implement four things:
   *
-  * name     : What you call your agent (just for fun). Please make this one fixed (unlike in the example
+  * [[Agent.name]]     : What you call your agent (just for fun). Please make this one fixed (unlike in the example
   *                   below)
-  * students : Please put your full names in this list.
+  * [[Agent.students]] : Please put your full names in this list.
+  * [[Agent.init]]     : Called at the start of a game
+  * [[Agent.move]]     : Is called when it's the agent's turn
   */
 abstract class Agent {
   val name : String
@@ -27,6 +31,11 @@ abstract class Agent {
     * So you can use the full 5 seconds to constantly revise that variable.
     */
   def move : Int
+
+  /**
+    * This variable is read if your Agent times out and didn't return a value. It is explicitly made mutable, so
+    * your move-method can regularly update it.
+    */
   @volatile var timeoutMove : Int = 1
 }
 
@@ -54,6 +63,10 @@ final case class HumanPlayer(val name : String) extends Agent {
   }
 }
 
+/**
+  * A player that always moves randomly
+  * @param name : What you call your agent (just for fun)
+  */
 class RandomPlayer(val name : String) extends Agent {
   val students = List("Dennis").asJava
   private var currentboard : Board = null
@@ -73,6 +86,9 @@ class RandomPlayer(val name : String) extends Agent {
   }
 }
 
+/**
+  * A player that always times out. For testing purposes
+  */
 class TimeOut extends Agent {
   val name = "Timeouter"
   val students = List("Dennis").asJava

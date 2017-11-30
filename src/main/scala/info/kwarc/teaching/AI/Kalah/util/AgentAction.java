@@ -1,4 +1,7 @@
-package info.kwarc.teaching.AI.Kalah;
+package info.kwarc.teaching.AI.Kalah.util;
+import info.kwarc.teaching.AI.Kalah.Agents.Agent;
+import info.kwarc.teaching.AI.Kalah.Board;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.TimeoutException;
@@ -10,7 +13,7 @@ import java.util.concurrent.TimeoutException;
 
 public class AgentAction
 {
-    static int move(Agent agent, long timelimitInMs) throws TimeoutException {
+    public static int move(Agent agent, long timelimitInMs) throws TimeoutException {
         AgentThread tAgent=new AgentThread();
         tAgent.agent=agent;
         tAgent.doInit=false;
@@ -41,7 +44,7 @@ public class AgentAction
         }
     }
 
-    static void init(Agent agent,Board board, boolean playerOne, long timelimitInMs) throws TimeoutException {
+    public static void init(Agent agent, Board board, boolean playerOne, long timelimitInMs) throws TimeoutException {
         AgentThread tAgent=new AgentThread();
         tAgent.doInit=true;
         tAgent.board=board;

@@ -1,6 +1,8 @@
 package info.kwarc.teaching.AI.Kalah
 
-import info.kwarc.teaching.AI.Kalah.utils._
+import info.kwarc.teaching.AI.Kalah.Agents.{HumanPlayer, RandomPlayer}
+import info.kwarc.teaching.AI.Kalah.Interfaces.{Fancy, Terminal}
+import info.kwarc.teaching.AI.Kalah.util._
 // import WS1617.agents._
 
 object Test {

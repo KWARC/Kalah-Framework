@@ -1,17 +1,19 @@
-package info.kwarc.teaching.AI.Kalah
+package info.kwarc.teaching.AI.Kalah.Interfaces
 
-import java.awt.{BasicStroke, BorderLayout, Color, Dimension, Font, Graphics, Graphics2D}
 import java.awt.event.{ActionEvent, ActionListener, WindowAdapter, WindowEvent}
 import java.awt.geom.Rectangle2D
+import java.awt.{BasicStroke, BorderLayout, Color, Dimension, Font, Graphics, Graphics2D}
 import javax.swing.{JFrame, JPanel, SwingUtilities, Timer}
 
-import info.kwarc.teaching.AI.Kalah.utils.File
+import info.kwarc.teaching.AI.Kalah.Board
+import info.kwarc.teaching.AI.Kalah.util.File
 
-import collection.JavaConverters._
+import scala.collection.JavaConverters._
 import scala.math._
 
 /**
-  * Created by jazzpirate on 11.12.16.
+  * An [[Interface]] is just a trait/class that visualizes a running game in some way, e.g. [[Terminal]] simply
+  * prints it in the terminal, [[Fancy]] opens a graphic window and... well, looks nice, I guess.
   */
 trait Interface {
   protected var (pl1,pl2) : (String,String) = ("","")
@@ -43,6 +45,11 @@ trait Interface {
   def + (that : Interface) = CombineInterfaces(THIS_TOP,that)
 }
 
+/**
+  * If you want to use more than one interface at the same time, this lets you do it.
+  * @param a : The first interface
+  * @param b : The second interface
+  */
 case class CombineInterfaces(a : Interface,b : Interface) extends Interface {
   protected def startgame: Unit = ???
   override def newGame(p1 : String, p2 : String, board : Board) = {
@@ -92,6 +99,9 @@ case class CombineInterfaces(a : Interface,b : Interface) extends Interface {
   }
 }
 
+/**
+  * Prints out everything on the terminal
+  */
 object Terminal extends Interface {
   def startgame = println(pl1 + " vs. " + pl2)
   def gameResult(sc1 : Int, sc2 : Int) = {
@@ -124,6 +134,10 @@ object Terminal extends Interface {
     println(scs.indices.map(i => i+1 + ": " + scs(i)._1 + "(" + scs(i)._2 + ")").mkString("\n"))
 }
 
+/**
+  * An interface that logs the progress of a game to a file
+  * @param f The file to use.
+  */
 case class Logger(f : File) extends Interface {
   protected def startgame: Unit = write(pl1 + " vs. " + pl2)
   override def endOfRound : Unit = {
@@ -164,10 +178,16 @@ case class Logger(f : File) extends Interface {
   }
 }
 
+
 object Fancy {
+
+  /**
+    * A graphical interface that visualizes the board and the player's moves
+    * @param size The font size to use.
+    */
   class FancyInterface(var size : Int = 36) extends Interface {
     var slow = true
-    val frame = new FancyFrame(i => (i * size) / 36)
+    private val frame = new FancyFrame(i => (i * size) / 36)
     frame.getContentPane.setLayout(new BorderLayout)
     frame.setVisible(true)
 
@@ -342,12 +362,12 @@ object Fancy {
     private def ?? = { frame.repaint() }
   }
 
-  trait myComponent {
+  private trait myComponent {
     var color : Color = Color.BLACK
     def draw(g : Graphics2D)
   }
 
-  class Text(pos_x : Int,pos_y : Int, init : String,scale : Int => Int) extends myComponent {
+  private class Text(pos_x : Int,pos_y : Int, init : String,scale : Int => Int) extends myComponent {
     var text = init
     def draw(g : Graphics2D): Unit = {
       g.setColor(color)
@@ -356,7 +376,7 @@ object Fancy {
 
   }
 
-  class Field(pos_x : Int,pos_y : Int, scale : Int => Int) extends myComponent {
+  private class Field(pos_x : Int,pos_y : Int, scale : Int => Int) extends myComponent {
     var value = 100
 
     def draw(g : Graphics2D): Unit = {
@@ -366,7 +386,7 @@ object Fancy {
     }
   }
 
-  case class Scoreboard(ls: List[(String, Int)]) extends JPanel {
+  private case class Scoreboard(ls: List[(String, Int)]) extends JPanel {
 
     val total = ls.length
 
@@ -398,7 +418,7 @@ object Fancy {
     setPreferredSize(new Dimension(1024,768))
   }
 
-  class MyPanel(board :Board,pl1 : String, pl2 : String,scale : Int => Int = i => i) extends JPanel {
+  private class MyPanel(board :Board,pl1 : String, pl2 : String,scale : Int => Int = i => i) extends JPanel {
     object timer extends ActionListener {
       private val DELAY = 10
       private val t = new Timer(DELAY,this)
@@ -470,7 +490,7 @@ object Fancy {
     }
   }
 
-  class FancyFrame(scale : Int => Int = i => i) extends JFrame {
+  private class FancyFrame(scale : Int => Int = i => i) extends JFrame {
 
     var panel: MyPanel = null
 

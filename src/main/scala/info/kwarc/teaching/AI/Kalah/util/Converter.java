@@ -1,5 +1,7 @@
-package info.kwarc.teaching.AI.Kalah;
+package info.kwarc.teaching.AI.Kalah.util;
 
+import info.kwarc.teaching.AI.Kalah.Agents.Agent;
+import info.kwarc.teaching.AI.Kalah.Board;
 import scala.Tuple4;
 import java.util.ArrayList;
 
