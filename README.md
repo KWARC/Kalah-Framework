@@ -1,5 +1,5 @@
-# Kalah-WS1617
-Kalah framework for the AI course at FAU WS16/17
+# Kalah-Framework
+Kalah framework for the AI course at FAU
 
 - `target/scala-2.12/kalah_2.12-1.0-javadoc.jar` and
 - `target/scala-2.12/api` contain the documentation,
