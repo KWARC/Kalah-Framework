@@ -57,8 +57,8 @@ abstract class Board(val houses : Int, val initSeeds : Int) {
 }
 
 /**
-  * Allows to play one game between two [[Agent]]s. Initializes a game board according to the parameters and
-  * calls init on the provided [[Agent]]s. The method "play" starts the game.
+  * Allows to play one game between two [[info.kwarc.teaching.AI.Kalah.Agents.Agent]]s. Initializes a game board according to the parameters and
+  * calls init on the provided [[info.kwarc.teaching.AI.Kalah.Agents.Agent]]s. The method "play" starts the game.
   * @param p1         : Agent1
   * @param p2         : Agent2
   * @param houses     : The number of houses per player (see [[Board]])

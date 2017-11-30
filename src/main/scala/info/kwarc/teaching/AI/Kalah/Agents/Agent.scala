@@ -8,11 +8,11 @@ import scala.util.Random
 /**
   * The abstract class for agents. Needs to implement four things:
   *
-  * [[Agent.name]]     : What you call your agent (just for fun). Please make this one fixed (unlike in the example
+  * - [[Agent.name]]     : What you call your agent (just for fun). Please make this one fixed (unlike in the example
   *                   below)
-  * [[Agent.students]] : Please put your full names in this list.
-  * [[Agent.init]]     : Called at the start of a game
-  * [[Agent.move]]     : Is called when it's the agent's turn
+  * - [[Agent.students]] : Please put your full names in this list.
+  * - [[Agent.init]]     : Called at the start of a game.
+  * - [[Agent.move]]     : is called when it's the agent's turn
   */
 abstract class Agent {
   val name : String
