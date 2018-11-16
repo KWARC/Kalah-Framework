@@ -20,6 +20,8 @@ trait Interface {
   protected var GameBoard : Board = null
   protected var round = 0
 
+  def write(s : String) : Unit
+
   def newGame(p1 : String, p2 : String, board : Board) = {
     pl1 = p1
     pl2 = p2
@@ -52,6 +54,11 @@ trait Interface {
   */
 case class CombineInterfaces(a : Interface,b : Interface) extends Interface {
   protected def startgame: Unit = ???
+
+  override def write(s: String): Unit = {
+    a.write(s)
+    b.write(s)
+  }
   override def newGame(p1 : String, p2 : String, board : Board) = {
     pl1 = p1
     pl2 = p2
@@ -104,6 +111,7 @@ case class CombineInterfaces(a : Interface,b : Interface) extends Interface {
   */
 object Terminal extends Interface {
   def startgame = println(pl1 + " vs. " + pl2)
+  def write(s : String) = println(s)
   def gameResult(sc1 : Int, sc2 : Int) = {
     print("\rFinished in round " + round + ". Final score: " + sc1 + " : " + sc2 + "\n")
     if (sc1 > sc2)
@@ -118,7 +126,7 @@ object Terminal extends Interface {
   def chosenMove(house : Int, playerOne : Boolean = true) =
     {}//print({if (playerOne) pl1 else pl2} + ": " + house)
 
-  def endRound: Unit = print("\rRound " + round + " Score: " + GameBoard.getScore(1) + " : " + GameBoard.getScore(2))
+  def endRound: Unit = print("\rRound " + round + " Score: " + GameBoard.getScore(1) + " : " + GameBoard.getScore(2) + "  ")
 
   def illegal(playerOne : Boolean = true, move : Int, board : Board) = {
     println({
@@ -141,6 +149,10 @@ object Terminal extends Interface {
 case class Logger(f : File) extends Interface {
   protected def startgame: Unit = write(pl1 + " vs. " + pl2)
   override def endOfRound : Unit = {
+  }
+
+  if(!f.exists()) {
+    f.createNewFile()
   }
   def write(s : String) = {
     val bef = File.read(f)
@@ -200,6 +212,8 @@ object Fancy {
       }
       if (!slow) Thread.sleep(5000)
     }
+
+    def write(s : String) = {}
 
     def startgame = {
       frame.init(GameBoard,pl1,pl2)

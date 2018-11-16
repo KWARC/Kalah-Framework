@@ -8,6 +8,7 @@ import info.kwarc.teaching.AI.Kalah.util._
 
 import scala.collection.mutable
 import collection.JavaConverters._
+import scala.util.Random
 
 
 /**
@@ -222,7 +223,7 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
 
   private def playerMove(pl : Player) : Unit = {
     interface.playerMove(pl == Player1)
-    val move = try {
+    var move = try {
         pl.pl match {
           case hp : HumanPlayer =>
             AgentAction.move(pl.pl,1000000)
@@ -238,7 +239,17 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
           case _: Throwable => throw Illegal(pl, -20)
         }
     }
-    if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) throw Illegal(pl,move)
+    if (!(move >= 1 && move <= houses && HouseIndex(pl,move).get > 0)) {
+      println("Illegal move by " + pl.pl.name + ": " + move)
+      val ls = GameBoard.getHouses(pl.pl)
+      val rnd = new Random
+      var i = rnd.nextInt(ls.asScala.size)
+      while (ls.asScala.toList(i) == 0) {
+        i = rnd.nextInt(ls.asScala.size)
+      }
+      move = i + 1
+      // throw Illegal(pl,move)
+    }
     GameBoard.moves ::= (pl,move)
     interface.chosenMove(move,pl == Player1)
     var index = HouseIndex(pl,move)
@@ -282,15 +293,19 @@ class Game(p1 : Agent, p2 : Agent,interface : Interface)(houses : Int = 6, initS
       Player1.init
     } catch {
       case e : java.util.concurrent.TimeoutException =>
-        interface.timeout(true)
-        return (0,1)
+        // interface.timeout(true)
+        println(Player1.pl.name + " timed out during init")
+        // sys.exit()
+        //return (0,1)
     }
     try {
       Player2.init
     } catch {
       case e : java.util.concurrent.TimeoutException =>
-        interface.timeout(false)
-        return (1,0)
+        // interface.timeout(false)
+        println(Player2.pl.name + " timed out during init")
+        // sys.exit()
+        // return (1,0)
     }
     try {
       while ({
