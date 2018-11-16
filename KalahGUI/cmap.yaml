@@ -1,0 +1,23 @@
+cmaps:
+    -    type: divergent
+         good: 0x00FF00
+         neutral: 0xFFFFFF
+         bad: 0xFF0000
+         lower: -10
+         upper: 10
+         name: GreenWhiteRed
+         
+    -    type: divergent
+         good: 0x00FF00
+         neutral: 0xFFFFFF
+         bad: 0xFF0000
+         lower: -1
+         upper: 1
+         name: GreenWhiteRedMC
+         
+    -    type: uniform
+         color: 0xFFFF00
+         name: White 
+north: GreenWhiteRed
+south: GreenWhiteRed
+fallback: 0xFFFFFF

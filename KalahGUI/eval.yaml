@@ -1,0 +1,9 @@
+evaluators:
+    -    ip : localhost
+         port: 2601
+         name: localeval
+    -    ip : localhost
+         port: 2602
+         name: mceval
+north: localeval
+south: localeval
