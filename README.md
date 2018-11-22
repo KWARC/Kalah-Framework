@@ -5,7 +5,7 @@ This contains:
 - `target/scala-2.12/kalah_2.12-1.0.jar` contains the compiled framework in total
 - `target/scala-2.12/kalah_2.12-1.0-javadoc.jar` contains the packaged (javadoc) documentation
 - `target/scala-2.12/api` contains the javadoc documentation and
-- `src` contains source files in scala and (thanks to Marcel) java interfaces so you don't have to take care of converting scala datastructures.
+- `src` contains source files in scala and (thanks to Marcel Rupprecht for doing all the work!) java interfaces so you don't have to take care of converting scala datastructures.
 
 You are free to use scala or java; even though the framework is written in scala, all the interfaces you'll need to use use standard java datatypes only.
 
@@ -26,3 +26,6 @@ and implement the required methods (init and move). For details see the document
 - Java 8
 - The .scala files should be compatible with scala 2.10. If there are any problems with the scala version, let me know as soon as possible via the forum.
 - If there are any other problems with using my framework (like java interfacing) please let me/us know via the forum as soon as possible.
+
+## Agent GUI
+Luca Reeb has kindly provided a GUI for debugging purposes in the subfolder `KalahGUI`. For a description, see `KalahGUI/README.md`.
