@@ -25,10 +25,64 @@ and implement the required methods (init and move). For details see the document
 - The exact time limits may change, make sure your implementations can deal with any provided limit. 
 - Given the time restrictions, *please make sure your agents are thread-safe and can be forcefully killed in a reasonable time frame*.
 
-**Requirements:**
-- Java 8
-- The .scala files should be compatible with scala 2.10. If there are any problems with the scala version, let me know as soon as possible via the forum.
-- If there are any other problems with using my framework (like java interfacing) please let me/us know via the forum as soon as possible.
-
 ## Agent GUI
 Luca Reeb has kindly provided a GUI for debugging purposes in the subfolder `KalahGUI`. For a description, see `KalahGUI/README.md`.
+
+
+## Getting started
+**Requirements:**
+- Java 8
+- Scala
+- Intelli J IDEA (Community and Ultimate should both work)
+  
+The .scala files should be compatible with scala 2.10. If there are any problems with the scala version, let me know as soon as possible via the forum.
+If there are any other problems with using my framework (like java interfacing) please let me/us know via the forum as soon as possible.
+
+For Ubuntu (18.04 LTS) you can install via:
+```bash
+sudo apt install openjdk-8-jdk scala
+sudo snap install intellij-idea-community --classic --edge
+```
+
+**Cloning the Repository**
+
+On the website of this repository you should find the link for pulling in the top right above the code.
+you can also donwload the repo as a zip file.
+
+![GitHub Logo](images/git pull.png)
+
+Also, you can directly go in the directory you want the repo and insert following command into your terminal.
+
+```bash
+git clone https://github.com/KWARC/Kalah-Framework.git
+```
+
+**Setup of the Project:**
+
+- Open Intelli J and click onto open from Folder.
+- Choose the folder you cloned the Repo into.
+- Intelli J should now install the dependecies for the Project, that might take some "long" time.
+- Now you right click on the Top Folder in your Project Browser and on "open module settings".
+
+![GitHub Logo](images/module settings.png)
+
+- In Topic "Project" change the SDK version in the first drop down to 1.8
+- On the Second drop down change the "Project language level" to "8 - Labdas, type annotations etc".
+
+![GitHub Logo](images/Project settings.png)
+
+- In "Modules" you select "language level" to "8 - Labdas, type annotations etc" in the drop down menu.
+
+![GitHub Logo](images/modules.png)
+
+**Start the Main Program:**
+
+- Navigate to Kalah-Framework/src/main/scala/info/kwarc/teaching/AI/Kalah
+- There you will find the Test.scala, right click the file and select "Run Test"
+
+![GitHub Logo](images/run test.png)
+
+- The program should now start and show you the game interface. It is possible to enter the moves in the command line.
+
+![GitHub Logo](images/running.png)
+
