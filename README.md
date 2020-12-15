@@ -49,7 +49,7 @@ sudo snap install intellij-idea-community --classic --edge
 On the website of this repository you should find the link for pulling in the top right above the code.
 you can also donwload the repo as a zip file.
 
-![GitHub Logo](images/git pull.png)
+![git_pull](images/git pull.png)
 
 Also, you can directly go in the directory you want the repo and insert following command into your terminal.
 
@@ -64,25 +64,25 @@ git clone https://github.com/KWARC/Kalah-Framework.git
 - Intelli J should now install the dependecies for the Project, that might take some "long" time.
 - Now you right click on the Top Folder in your Project Browser and on "open module settings".
 
-![GitHub Logo](images/module settings.png)
+![module_settings](images/module settings.png)
 
 - In Topic "Project" change the SDK version in the first drop down to 1.8
 - On the Second drop down change the "Project language level" to "8 - Labdas, type annotations etc".
 
-![GitHub Logo](images/Project settings.png)
+![project_settings](images/Project settings.png)
 
 - In "Modules" you select "language level" to "8 - Labdas, type annotations etc" in the drop down menu.
 
-![GitHub Logo](images/modules.png)
+![module-settings](images/modules.png)
 
 **Start the Main Program:**
 
 - Navigate to Kalah-Framework/src/main/scala/info/kwarc/teaching/AI/Kalah
 - There you will find the Test.scala, right click the file and select "Run Test"
 
-![GitHub Logo](images/run test.png)
+![run_test](images/run test.png)
 
 - The program should now start and show you the game interface. It is possible to enter the moves in the command line.
 
-![GitHub Logo](images/running.png)
+![running](images/running.png)
 
