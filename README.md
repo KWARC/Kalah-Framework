@@ -65,28 +65,35 @@ git clone https://github.com/KWARC/Kalah-Framework.git
 
 ### Setup of the Project:
 
-- Open Intelli J and install the Scala Plugin.
-- Click on open from Folder and choose the folder you cloned the Repo into.
+- Open Intelli J and install the Scala plugin and restart Intelli J.
+- Click on open from folder and choose the folder you cloned the Repo into.
+- Intelli J should now install the dependencies for the project from the sbt file, which might take some "long" time.
+
+___
+**If this is not happening, you might try these additional steps.**
+
 - Open file *"Kalah-Framework/src/main/scala/info/kwarc/teaching/AI/Kalah/Test"*, you will be ask which scala plugin should be used, choose the installed one.
 - Restart Intelli J
 - You will be ask to set the environments of Java and Scala.
   
 ![module_settings](images/set_sdks.png)
   
-- Set Java to *"1.8"* and the scala environment to the system environment you installed.
+- Set Java to *"1.8"* and the Scala environment to the system environment you installed.
 
 ![module_settings](images/choose_scala_env.png)
 
 - Now close Intelli J, delete the cloned repo and clone it fresh again.
-- Open Intelli J, click on open from Folder and choose the folder you cloned the Repo into.
-- Intelli J should now install the dependencies for the project from the sbt file, which might take some "long" time.
-- If this is not the case remove the cloned folder and clone anew and  repeat the steps before.
-- Now you right-click on the Top Folder in your Project Browser and on *"open module settings"*.
+- Open Intelli J, click on open from folder and choose the folder you cloned the Repo into.
+___
+
+**Continuing**
+
+- Now you right-click on the top folder in your project browser and on *"open module settings"*.
 
 ![module_settings](images/module_settings.png)
 
-- In Topic "Project" change the *"SDK version"* in the first drop-down menu to *"1.8"*.
-- On the Second drop-down menu change the *"Project language level"* to *"8 - Lambdas, type annotations etc"*.
+- In topic "Project" change the *"SDK version"* in the first drop-down menu to *"1.8"*.
+- On the second drop-down menu change the *"Project language level"* to *"8 - Lambdas, type annotations etc"*.
 
 ![project_settings](images/Project_settings.png)
 
@@ -96,7 +103,7 @@ git clone https://github.com/KWARC/Kalah-Framework.git
 
 ### Start the Main Program:
 
-- Build the Project
+- Build the project
 - Navigate to *"Kalah-Framework/src/main/scala/info/kwarc/teaching/AI/Kalah"*
 - There you will find the Test.scala, right-click the file and select *"Run Test"*
 
