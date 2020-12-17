@@ -21,9 +21,9 @@ and implement the required methods (init and move). For details see the document
 - Your submission may not exceed 200 MB.
 - Your implementation must not interact with external resources, such as the network or other programs.
 - If you use additional objects/classes, please put them in a unique namespace *extending* `info.kwarc.teaching.AI.Kalah.WS2021.agents`
-- Agents need to implement two functions: *init* and *move*. The first one will be called when the game starts. Your agent will be handed an instance of the `Board`-class, which contains e.g. the number of houses and starting seeds per house.
-- Your *init* function has  about 10 seconds to terminate. If it doesn't terminate in 10 seconds, that agent will lose the current game.
-- Your *move* function has  about 5 seconds to return a valid move. If it doesn't return a valid move in the time limit, its [[info.kwarc.teaching.AI.Kalah.Agents.Agent.timeoutMove]] variable will be taken instead.
+- Agents need to implement two methods: *init* and *move*. The first one will be called when the game starts. Your agent will be handed an instance of the `Board`-class, which contains e.g. the number of houses and starting seeds per house.
+- Your *init* method has about 10 seconds to terminate. If it doesn't terminate in 10 seconds, that agent will lose the current game.
+- Your *move* method has about 5 seconds to return a valid move. If it doesn't return a valid move in the time limit, its [[info.kwarc.teaching.AI.Kalah.Agents.Agent.timeoutMove]] variable will be taken instead.
 - The exact time limits may change, make sure your implementations can deal with any provided limit.
 - Given the time restrictions, *please make sure your agents are thread-safe and can be forcefully killed in a reasonable time frame*.
 
@@ -46,7 +46,7 @@ If there are any other problems with using my framework (like java interfacing) 
 
 You can install the dependencies and IDE via:
 ```bash
-sudo apt install openjdk-8-jdk scala
+sudo apt install openjdk-8-jdk scala git
 sudo snap install intellij-idea-community --classic --edge
 ```
 
@@ -65,9 +65,22 @@ git clone https://github.com/KWARC/Kalah-Framework.git
 
 ### Setup of the Project:
 
-- Open Intelli J and click on open from Folder.
-- Choose the folder you cloned the Repo into.
-- Intelli J should now install the dependencies for the project, which might take some "long" time.
+- Open Intelli J and install the Scala Plugin.
+- Click on open from Folder and choose the folder you cloned the Repo into.
+- Open file *"Kalah-Framework/src/main/scala/info/kwarc/teaching/AI/Kalah/Test"*, you will be ask which scala plugin should be used, choose the installed one.
+- Restart Intelli J
+- You will be ask to set the environments of Java and Scala.
+  
+![module_settings](images/set_sdks.png)
+  
+- Set Java to *"1.8"* and the scala environment to the system environment you installed.
+
+![module_settings](images/choose_scala_env.png)
+
+- Now close Intelli J, delete the cloned repo and clone it fresh again.
+- Open Intelli J, click on open from Folder and choose the folder you cloned the Repo into.
+- Intelli J should now install the dependencies for the project from the sbt file, which might take some "long" time.
+- If this is not the case remove the cloned folder and clone anew and  repeat the steps before.
 - Now you right-click on the Top Folder in your Project Browser and on *"open module settings"*.
 
 ![module_settings](images/module_settings.png)
@@ -83,6 +96,7 @@ git clone https://github.com/KWARC/Kalah-Framework.git
 
 ### Start the Main Program:
 
+- Build the Project
 - Navigate to *"Kalah-Framework/src/main/scala/info/kwarc/teaching/AI/Kalah"*
 - There you will find the Test.scala, right-click the file and select *"Run Test"*
 
